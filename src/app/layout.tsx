@@ -39,7 +39,36 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-neutral-50 text-neutral-900">
+        <header className="border-b border-neutral-200 bg-white/90 backdrop-blur">
+          <nav className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4 sm:px-10">
+            <a href="/" className="text-sm font-semibold tracking-tight">
+              Tower Defense CJ
+            </a>
+            <div className="flex items-center gap-2 text-sm">
+              <a
+                href="/"
+                className="rounded-full px-3 py-1.5 text-neutral-700 transition hover:bg-neutral-100 hover:text-neutral-900"
+              >
+                Home
+              </a>
+              <a
+                href="/play"
+                className="rounded-full px-3 py-1.5 text-neutral-700 transition hover:bg-neutral-100 hover:text-neutral-900"
+              >
+                Play
+              </a>
+              <a
+                href="/news"
+                className="rounded-full px-3 py-1.5 text-neutral-700 transition hover:bg-neutral-100 hover:text-neutral-900"
+              >
+                News
+              </a>
+            </div>
+          </nav>
+        </header>
+        {children}
+      </body>
     </html>
   );
 }
