@@ -71,6 +71,19 @@ export default function PlayPage() {
               />
             </>
           </div>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <a
+              href={gameUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-9 items-center justify-center rounded-full bg-neutral-900 px-4 text-xs font-semibold text-white transition hover:bg-neutral-700"
+            >
+              Apri Gioco a Schermo Pieno
+            </a>
+            <p className="text-xs text-neutral-500">
+              Consigliato se resti bloccato su "Ready to start / Loading".
+            </p>
+          </div>
           <div
             id="game-error"
             className={`mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 ${
