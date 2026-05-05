@@ -6,7 +6,8 @@ export default function PlayPage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const gameUrl = useMemo(
-    () => process.env.NEXT_PUBLIC_GAME_EMBED_URL?.trim() ?? "",
+    () =>
+      process.env.NEXT_PUBLIC_GAME_EMBED_URL?.trim() || "/game/index.html",
     [],
   );
 
@@ -35,9 +36,7 @@ export default function PlayPage() {
             <span>Game Runtime</span>
             <span>
               status:{" "}
-              {!gameUrl
-                ? "missing url"
-                : hasError
+              {hasError
                   ? "error"
                   : isLoaded
                     ? "ready"
@@ -48,49 +47,29 @@ export default function PlayPage() {
             id="game-root"
             className="relative min-h-[420px] overflow-hidden rounded-xl border border-dashed border-neutral-300 bg-neutral-100 sm:min-h-[560px]"
           >
-            {gameUrl ? (
-              <>
-                {!isLoaded && !hasError && (
-                  <div className="absolute inset-0 z-10 grid place-items-center p-6">
-                    <div className="w-full max-w-md rounded-xl border border-neutral-200 bg-white p-5 text-center">
-                      <p className="text-sm font-medium text-neutral-500">
-                        Loading
-                      </p>
-                      <p className="mt-2 text-base font-semibold">
-                        Avvio runtime web in corso
-                      </p>
-                    </div>
+            <>
+              {!isLoaded && !hasError && (
+                <div className="absolute inset-0 z-10 grid place-items-center p-6">
+                  <div className="w-full max-w-md rounded-xl border border-neutral-200 bg-white p-5 text-center">
+                    <p className="text-sm font-medium text-neutral-500">
+                      Loading
+                    </p>
+                    <p className="mt-2 text-base font-semibold">
+                      Avvio runtime web in corso
+                    </p>
                   </div>
-                )}
-                <iframe
-                  title="Tower Defense CJ Web Build"
-                  src={gameUrl}
-                  className="h-[560px] w-full border-0"
-                  loading="lazy"
-                  allow="fullscreen; autoplay"
-                  onLoad={() => setIsLoaded(true)}
-                  onError={() => setHasError(true)}
-                />
-              </>
-            ) : (
-              <div className="absolute inset-0 grid place-items-center p-6">
-                <div className="w-full max-w-lg rounded-xl border border-neutral-200 bg-white p-5 text-center">
-                  <p className="text-sm font-medium text-neutral-500">
-                    Config missing
-                  </p>
-                  <p className="mt-2 text-base font-semibold">
-                    URL build web non configurato
-                  </p>
-                  <p className="mt-2 text-sm text-neutral-600">
-                    Imposta la variabile ambiente
-                    <code className="mx-1 rounded bg-neutral-100 px-1.5 py-0.5">
-                      NEXT_PUBLIC_GAME_EMBED_URL
-                    </code>
-                    nel progetto Vercel.
-                  </p>
                 </div>
-              </div>
-            )}
+              )}
+              <iframe
+                title="Tower Defense CJ Web Build"
+                src={gameUrl}
+                className="h-[560px] w-full border-0"
+                loading="lazy"
+                allow="fullscreen; autoplay"
+                onLoad={() => setIsLoaded(true)}
+                onError={() => setHasError(true)}
+              />
+            </>
           </div>
           <div
             id="game-error"
