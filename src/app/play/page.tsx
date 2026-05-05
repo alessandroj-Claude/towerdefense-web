@@ -1,4 +1,15 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
 export default function PlayPage() {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const gameUrl = useMemo(
+    () => process.env.NEXT_PUBLIC_GAME_EMBED_URL?.trim() ?? "",
+    [],
+  );
+
   return (
     <main className="min-h-screen bg-neutral-50 px-6 py-16 text-neutral-900 sm:px-10">
       <div className="mx-auto max-w-5xl space-y-6">
@@ -22,29 +33,72 @@ export default function PlayPage() {
         >
           <div className="mb-3 flex items-center justify-between text-sm text-neutral-500">
             <span>Game Runtime</span>
-            <span>status: waiting build</span>
+            <span>
+              status:{" "}
+              {!gameUrl
+                ? "missing url"
+                : hasError
+                  ? "error"
+                  : isLoaded
+                    ? "ready"
+                    : "loading"}
+            </span>
           </div>
           <div
             id="game-root"
             className="relative min-h-[420px] overflow-hidden rounded-xl border border-dashed border-neutral-300 bg-neutral-100 sm:min-h-[560px]"
           >
-            <div className="absolute inset-0 grid place-items-center p-6">
-              <div className="w-full max-w-md rounded-xl border border-neutral-200 bg-white p-5 text-center">
-                <p className="text-sm font-medium text-neutral-500">Loading</p>
-                <p className="mt-2 text-base font-semibold">
-                  Web build non ancora disponibile
-                </p>
-                <p className="mt-2 text-sm text-neutral-600">
-                  Qui verra&apos; agganciato il runtime del gioco (canvas/WebAssembly).
-                </p>
+            {gameUrl ? (
+              <>
+                {!isLoaded && !hasError && (
+                  <div className="absolute inset-0 z-10 grid place-items-center p-6">
+                    <div className="w-full max-w-md rounded-xl border border-neutral-200 bg-white p-5 text-center">
+                      <p className="text-sm font-medium text-neutral-500">
+                        Loading
+                      </p>
+                      <p className="mt-2 text-base font-semibold">
+                        Avvio runtime web in corso
+                      </p>
+                    </div>
+                  </div>
+                )}
+                <iframe
+                  title="Tower Defense CJ Web Build"
+                  src={gameUrl}
+                  className="h-[560px] w-full border-0"
+                  loading="lazy"
+                  allow="fullscreen; autoplay"
+                  onLoad={() => setIsLoaded(true)}
+                  onError={() => setHasError(true)}
+                />
+              </>
+            ) : (
+              <div className="absolute inset-0 grid place-items-center p-6">
+                <div className="w-full max-w-lg rounded-xl border border-neutral-200 bg-white p-5 text-center">
+                  <p className="text-sm font-medium text-neutral-500">
+                    Config missing
+                  </p>
+                  <p className="mt-2 text-base font-semibold">
+                    URL build web non configurato
+                  </p>
+                  <p className="mt-2 text-sm text-neutral-600">
+                    Imposta la variabile ambiente
+                    <code className="mx-1 rounded bg-neutral-100 px-1.5 py-0.5">
+                      NEXT_PUBLIC_GAME_EMBED_URL
+                    </code>
+                    nel progetto Vercel.
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <div
             id="game-error"
-            className="mt-3 hidden rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            className={`mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 ${
+              hasError ? "block" : "hidden"
+            }`}
           >
-            Errore runtime: impossibile avviare la build web.
+            Errore runtime: impossibile caricare la build web.
           </div>
         </section>
 
