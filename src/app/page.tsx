@@ -23,11 +23,9 @@ export default function Home() {
             </a>{" "}
             <a
               className="inline-flex h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-6 text-sm font-medium text-neutral-800 transition hover:border-neutral-400"
-              href="https://github.com/alessandroj-Claude/towerdefense-web"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/news"
             >
-              Devlog
+              News
             </a>
           </div>
         </section>
