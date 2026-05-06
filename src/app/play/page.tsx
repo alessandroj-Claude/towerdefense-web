@@ -6,8 +6,20 @@ export default function PlayPage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const gameUrl = useMemo(
-    () =>
-      process.env.NEXT_PUBLIC_GAME_EMBED_URL?.trim() || "/game/index.html",
+    () => {
+      const baseGameUrl =
+        process.env.NEXT_PUBLIC_GAME_EMBED_URL?.trim() || "/game/index.html";
+      const backendUrl =
+        process.env.NEXT_PUBLIC_BACKEND_URL?.trim() ||
+        "https://tower-defense-cj.onrender.com";
+      try {
+        const url = new URL(baseGameUrl, window.location.origin);
+        url.searchParams.set("backend_url", backendUrl);
+        return `${url.pathname}${url.search}${url.hash}`;
+      } catch {
+        return baseGameUrl;
+      }
+    },
     [],
   );
 
