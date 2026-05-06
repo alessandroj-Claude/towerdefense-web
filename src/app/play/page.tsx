@@ -64,7 +64,7 @@ export default function PlayPage() {
                 src={gameUrl}
                 className="h-[560px] w-full border-0"
                 loading="lazy"
-                allow="fullscreen; autoplay"
+                allow="fullscreen; autoplay; clipboard-read; clipboard-write"
                 onLoad={() => setIsLoaded(true)}
                 onError={() => setHasError(true)}
               />
