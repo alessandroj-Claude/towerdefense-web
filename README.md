@@ -21,6 +21,5 @@ This project is intended to be deployed on Vercel and connected to:
 Set these in Project Settings -> Environment Variables:
 
 - `NEXT_PUBLIC_GAME_EMBED_URL` (default: `/game/index.html`)
-- `NEXT_PUBLIC_BACKEND_URL` (default: `https://tower-defense-cj.onrender.com`)
 
 After any env var change, trigger a new Vercel deploy.
