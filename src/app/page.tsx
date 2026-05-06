@@ -19,7 +19,7 @@ export default function Home() {
               className="inline-flex h-11 items-center justify-center rounded-full bg-neutral-900 px-6 text-sm font-medium text-white transition hover:bg-neutral-700"
               href="/play"
             >
-              Play (Coming Soon)
+              Play
             </a>{" "}
             <a
               className="inline-flex h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-6 text-sm font-medium text-neutral-800 transition hover:border-neutral-400"
