@@ -176,17 +176,36 @@ function towerDefenseDpr() {
 
 function applyTowerDefenseCanvasScale() {
     const canvas = document.getElementById("canvas");
-    if (!canvas) {
-        return;
+    if (!canvas) return;
+
+    const ar = TD_BASE_WIDTH / TD_BASE_HEIGHT;
+    const viewW = window.innerWidth;
+    const viewH = window.innerHeight;
+
+    let w, h;
+    if (viewW / viewH > ar) {
+        h = viewH;
+        w = Math.round(h * ar);
+    } else {
+        w = viewW;
+        h = Math.round(w / ar);
     }
+
     const dpr = towerDefenseDpr();
+    canvas.style.width  = w + "px";
+    canvas.style.height = h + "px";
+    canvas.style.left   = Math.round((viewW - w) / 2) + "px";
+    canvas.style.top    = Math.round((viewH - h) / 2) + "px";
+    canvas.style.right  = "auto";
+    canvas.style.bottom = "auto";
+    canvas.style.imageRendering = dpr > 1 ? "auto" : "pixelated";
+
     canvas.dataset.tdDpr = String(dpr);
     canvas.dataset.tdBaseWidth = String(TD_BASE_WIDTH);
     canvas.dataset.tdBaseHeight = String(TD_BASE_HEIGHT);
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.imageRendering = dpr > 1 ? "auto" : "pixelated";
 }
+
+window.addEventListener("resize", applyTowerDefenseCanvasScale);
 
 function show_infobox() {
     infobox.style.display = "block";
