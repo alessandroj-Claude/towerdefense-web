@@ -568,8 +568,14 @@ frameborder="1"
         setTimeout(() => { s.style.display = "none"; }, 750);
     }
 
+    function navigateHome() {
+        window.onbeforeunload = null;
+        window.location.href = "/";
+    }
+
     window.setSplashMsg = setSplashMsg;
     window.hideSplash = hideSplash;
+    window.navigateHome = navigateHome;
 
     </script>
 
