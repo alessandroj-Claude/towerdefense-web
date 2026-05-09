@@ -577,6 +577,19 @@ frameborder="1"
     window.hideSplash = hideSplash;
     window.navigateHome = navigateHome;
 
+    (function() {
+        var splash = document.getElementById('splash');
+        if (!splash) return;
+        function onGesture() {
+            if (window.MM) window.MM.UME = true;
+            var canvas = document.querySelector('canvas.emscripten');
+            if (canvas) canvas.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
+        }
+        ['click','touchstart','pointerdown'].forEach(function(t) {
+            splash.addEventListener(t, onGesture, {once: true, passive: true});
+        });
+    })();
+
     </script>
 
 </body>
