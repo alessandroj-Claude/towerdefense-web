@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
 
@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: "Tower Defense CJ",
   description:
     "Sito ufficiale di Tower Defense CJ. Aggiornamenti progetto, devlog e futura versione web giocabile.",
+  manifest: "/site.webmanifest",
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
+  },
   openGraph: {
     title: "Tower Defense CJ",
     description:
@@ -31,6 +36,10 @@ export const metadata: Metadata = {
       "Aggiornamenti progetto, devlog e futura versione web giocabile.",
     images: ["/opengraph-image"],
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1a1a2e",
 };
 
 export default function RootLayout({

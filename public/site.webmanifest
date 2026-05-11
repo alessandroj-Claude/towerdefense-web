@@ -1,0 +1,12 @@
+{
+  "name": "Tower Defense CJ",
+  "short_name": "TowerDef CJ",
+  "description": "Tower Defense CJ — gioca nel browser.",
+  "start_url": "/play",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#1a1a2e",
+  "icons": [
+    { "src": "/file.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
