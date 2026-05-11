@@ -206,6 +206,8 @@ function applyTowerDefenseCanvasScale() {
     canvas.dataset.tdDpr = String(dpr);
     canvas.dataset.tdBaseWidth = String(TD_BASE_WIDTH);
     canvas.dataset.tdBaseHeight = String(TD_BASE_HEIGHT);
+    canvas.dataset.tdCssWidth = String(w);
+    canvas.dataset.tdCssHeight = String(h);
 }
 
 window.addEventListener("resize", applyTowerDefenseCanvasScale);
