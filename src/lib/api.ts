@@ -109,3 +109,16 @@ export async function getLeaderboard(
     `${BACKEND_URL}/leaderboard/global?difficulty=${encodeURIComponent(difficulty)}&limit=${limit}`
   );
 }
+
+export async function getUserRuns(
+  userId: number,
+  token: string,
+  limit: number = 10
+): Promise<LeaderboardEntry[] | null> {
+  return fetchJson<LeaderboardEntry[]>(
+    `${BACKEND_URL}/leaderboard/user/${userId}?limit=${limit}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+}

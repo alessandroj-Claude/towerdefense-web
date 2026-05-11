@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { login, register, getSavesMeta, getAuthMe, getProfileStats } from "@/lib/api";
+import { login, register, getSavesMeta, getAuthMe, getProfileStats, getUserRuns, type LeaderboardEntry } from "@/lib/api";
 import { getAuthState, setAuthState, clearAuthState, type AuthState } from "@/lib/auth";
 
 export default function AccountPage() {
@@ -14,13 +14,17 @@ export default function AccountPage() {
   const [saveMeta, setSaveMeta] = useState<{ exists: boolean; updated_at?: string } | null>(null);
   const [meData, setMeData] = useState<{ user_id: number; username: string; is_admin: boolean; dlcs: string[] } | null>(null);
   const [statsData, setStatsData] = useState<unknown>(null);
+  const [userRuns, setUserRuns] = useState<LeaderboardEntry[] | null>(null);
   const [backendUnavailable, setBackendUnavailable] = useState(false);
 
   const refreshData = async (auth: AuthState) => {
     setBackendUnavailable(false);
-    const meta = await getSavesMeta(auth.userId, auth.token);
-    const me = await getAuthMe(auth.token);
-    const stats = await getProfileStats(auth.token);
+    const [meta, me, stats, runs] = await Promise.all([
+      getSavesMeta(auth.userId, auth.token),
+      getAuthMe(auth.token),
+      getProfileStats(auth.token),
+      getUserRuns(auth.userId, auth.token, 10),
+    ]);
 
     if (meta === null && me === null) {
       setBackendUnavailable(true);
@@ -28,6 +32,7 @@ export default function AccountPage() {
       setSaveMeta(meta);
       setMeData(me);
       setStatsData(stats);
+      setUserRuns(runs);
     }
   };
 
@@ -77,6 +82,7 @@ export default function AccountPage() {
     setSaveMeta(null);
     setMeData(null);
     setStatsData(null);
+    setUserRuns(null);
     setError("");
   }
 
@@ -256,6 +262,41 @@ export default function AccountPage() {
             </p>
           )}
         </div>
+      </div>
+
+      {/* Run History */}
+      <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+        <p className="text-sm font-medium text-neutral-700 mb-3">Partite recenti</p>
+        {userRuns === null ? (
+          <p className="text-sm text-neutral-500">Storico non disponibile</p>
+        ) : userRuns.length === 0 ? (
+          <p className="text-sm text-neutral-500">Nessuna partita registrata</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-neutral-100 text-left text-xs text-neutral-500">
+                  <th className="pb-2 pr-4 font-medium">Punti</th>
+                  <th className="pb-2 pr-4 font-medium">Onda</th>
+                  <th className="pb-2 pr-4 font-medium">Difficoltà</th>
+                  <th className="pb-2 font-medium">Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                {userRuns.map((run, i) => (
+                  <tr key={i} className="border-b border-neutral-50 last:border-0">
+                    <td className="py-2 pr-4 font-semibold text-neutral-900">{run.score.toLocaleString()}</td>
+                    <td className="py-2 pr-4 text-neutral-700">{run.wave}</td>
+                    <td className="py-2 pr-4 text-neutral-700 capitalize">{run.difficulty}</td>
+                    <td className="py-2 text-neutral-500">
+                      {run.created_at ? new Date(run.created_at).toLocaleDateString("it-IT") : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Actions */}
