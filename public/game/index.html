@@ -6,7 +6,7 @@ Loading test_giochino.codex from test_giochino.codex.apk
     Template Version : 0.9.3
     Python  : 3.12
     CDN URL : https://pygame-web.github.io/cdn/0.9.3/
-    Screen  : 1152x968
+    Screen  : 1280x720
     Title   : test_giochino.codex
     Folder  : test_giochino.codex
     Authors : pgw
@@ -69,10 +69,9 @@ async def custom_site():
         # but we need to fill __file__ that is not yet set
         __import__(__name__).__file__ = main
 
-        if hasattr(platform.window, "setSplashMsg"):
-            platform.window.setSplashMsg("Clicca per iniziare")
-
+        # now make a prompt
         msg  = "Ready to start ! Please click/touch page"
+        platform.window.infobox.innerText = msg
         print("\n"*4, f"    * Waiting for media user engagement. {msg} *" , "\n"*4)
 
         while not platform.window.MM.UME:
@@ -97,10 +96,6 @@ async def custom_site():
     platform.window.infobox.style.display = "none"
     platform.window.config.gui_divider = 1
     platform.window.window_resize()
-    if hasattr(platform.window, "applyTowerDefenseCanvasScale"):
-        platform.window.applyTowerDefenseCanvasScale()
-    if hasattr(platform.window, "hideSplash"):
-        platform.window.hideSplash()
     print("default.tmpl: done")
 
     shell.interactive()
@@ -161,56 +156,10 @@ config = {
     cdn : "https://pygame-web.github.io/cdn/0.9.3/",
     autorun : 0,
     PYBUILD : "3.12",
-    fb_ar   :  1.19,
-    fb_width : "1152",
-    fb_height : "968"
+    fb_ar   :  1.77,
+    fb_width : "1280",
+    fb_height : "720"
 }
-
-const TD_BASE_WIDTH = Number(config.fb_width || 1152);
-const TD_BASE_HEIGHT = Number(config.fb_height || 968);
-
-function towerDefenseDpr() {
-    const raw = Number(window.devicePixelRatio || 1);
-    if (!Number.isFinite(raw) || raw < 1) {
-        return 1;
-    }
-    return Math.min(raw, 2);
-}
-
-function applyTowerDefenseCanvasScale() {
-    const canvas = document.getElementById("canvas");
-    if (!canvas) return;
-
-    const ar = TD_BASE_WIDTH / TD_BASE_HEIGHT;
-    const viewW = window.innerWidth;
-    const viewH = window.innerHeight;
-
-    let w, h;
-    if (viewW / viewH > ar) {
-        h = viewH;
-        w = Math.round(h * ar);
-    } else {
-        w = viewW;
-        h = Math.round(w / ar);
-    }
-
-    const dpr = towerDefenseDpr();
-    canvas.style.width  = w + "px";
-    canvas.style.height = h + "px";
-    canvas.style.left   = Math.round((viewW - w) / 2) + "px";
-    canvas.style.top    = Math.round((viewH - h) / 2) + "px";
-    canvas.style.right  = "auto";
-    canvas.style.bottom = "auto";
-    canvas.style.imageRendering = dpr > 1 ? "auto" : "pixelated";
-
-    canvas.dataset.tdDpr = String(dpr);
-    canvas.dataset.tdBaseWidth = String(TD_BASE_WIDTH);
-    canvas.dataset.tdBaseHeight = String(TD_BASE_HEIGHT);
-    canvas.dataset.tdCssWidth = String(w);
-    canvas.dataset.tdCssHeight = String(h);
-}
-
-window.addEventListener("resize", applyTowerDefenseCanvasScale);
 
 function show_infobox() {
     infobox.style.display = "block";
@@ -256,73 +205,14 @@ function show_infobox() {
         }
 
         #infobox {
-            position: fixed;
-            background: #1a2a3a;
-            color: #7dc8f0;
+            position: fixed; /* center relative to viewport */
+            background: green;
+            color: blue;
             font-weight: bold;
             padding: 12px 24px;
-            display: none;
+ /*           display: none; */
             z-index: 999999;
         }
-
-        #splash {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #0d1117;
-            z-index: 9999999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.7s ease;
-            cursor: pointer;
-        }
-        #splash-inner {
-            text-align: center;
-            font-family: arial, sans-serif;
-        }
-        #splash-title {
-            color: #7dc8f0;
-            font-size: 3.5rem;
-            font-weight: bold;
-            letter-spacing: 0.25em;
-            margin: 0 0 8px;
-            text-shadow: 0 0 30px rgba(125,200,240,0.35);
-        }
-        #splash-sub {
-            color: #4a7a9b;
-            font-size: 0.95rem;
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            margin: 0 0 52px;
-        }
-        #splash-msg {
-            color: #8a9ab0;
-            font-size: 0.9rem;
-            margin: 0 0 20px;
-            min-height: 1.4em;
-        }
-        #splash-spinner {
-            width: 36px; height: 36px;
-            border: 2px solid #1e3a50;
-            border-top: 2px solid #7dc8f0;
-            border-radius: 50%;
-            animation: splash-spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        @keyframes splash-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        @keyframes splash-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.25; }
-        }
-        #splash.splash-ready #splash-msg {
-            color: #7dc8f0;
-            font-size: 1.05rem;
-            animation: splash-pulse 1.4s ease-in-out infinite;
-        }
-        #splash.splash-ready #splash-spinner { display: none; }
         div.emscripten { text-align: center; }
         div.emscripten_border { border: 1px solid black; }
         div.thick_border { border: 4px solid black; }
@@ -332,10 +222,11 @@ function show_infobox() {
         canvas.emscripten {
             border: 0px none;
             background-color: transparent;
-            image-rendering: auto;
             width: 100%;
             height: 100%;
             z-index: 5;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
 
             padding: 0;
             margin: 0 auto;
@@ -351,7 +242,7 @@ function show_infobox() {
             font-family: arial;
             margin: 0;
             padding: none;
-            background-color: #7f7f7f;
+            background-color:powderblue;
         }
 
         .topright{
@@ -410,15 +301,6 @@ function show_infobox() {
     </div>
 
 
-
-    <div id="splash">
-        <div id="splash-inner">
-            <div id="splash-title">TOWER DEFENSE</div>
-            <div id="splash-sub">CJ Edition</div>
-            <div id="splash-msg">Caricamento...</div>
-            <div id="splash-spinner"></div>
-        </div>
-    </div>
 
     <canvas class="emscripten" id="canvas"
 width="1px"
@@ -493,8 +375,40 @@ frameborder="1"
 
     <script type="application/javascript">
 
+    const TD_BASE_WIDTH = 1280;
+    const TD_BASE_HEIGHT = 720;
+
+    function towerDefenseDpr() {
+        const raw = Number(window.devicePixelRatio || 1);
+        if (!Number.isFinite(raw) || raw <= 1) {
+            return 1;
+        }
+        return Math.min(raw, 2);
+    }
+
+    function applyTowerDefenseCanvasScale() {
+        const canvas = document.getElementById("canvas");
+        if (!canvas) {
+            return;
+        }
+        const dpr = towerDefenseDpr();
+        const w = TD_BASE_WIDTH;
+        const h = TD_BASE_HEIGHT;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        canvas.dataset.tdDpr = String(dpr);
+        canvas.dataset.tdBaseWidth = String(TD_BASE_WIDTH);
+        canvas.dataset.tdBaseHeight = String(TD_BASE_HEIGHT);
+        canvas.dataset.tdCssWidth = String(w);
+        canvas.dataset.tdCssHeight = String(h);
+        canvas.style.imageRendering = dpr > 1 ? "auto" : "pixelated";
+    }
+
     globalThis.__canvas_resized = (self, ecw, ech) => {
         console.warn("TODO: panda3d canvas monitor", self, ecw, ech)
+        applyTowerDefenseCanvasScale()
     }
 
     async function custom_onload(debug_hidden) {
@@ -509,6 +423,7 @@ frameborder="1"
         box.hidden =  debug_hidden
 
         show_infobox()
+        applyTowerDefenseCanvasScale()
     }
 
     function custom_prerun(){
@@ -520,9 +435,6 @@ frameborder="1"
     function custom_postrun(){
         // python main and no VFS filesystem yet.
         console.log(__FILE__, "custom_postrun")
-        if (typeof applyTowerDefenseCanvasScale === "function") {
-            applyTowerDefenseCanvasScale()
-        }
 
     }
 
@@ -554,43 +466,6 @@ frameborder="1"
     function frame_online(url) {
         window.frames["iframe"].location = url;
     }
-
-    function setSplashMsg(msg) {
-        const el = document.getElementById("splash-msg");
-        if (el) el.textContent = msg;
-        const s = document.getElementById("splash");
-        if (s) s.classList.add("splash-ready");
-    }
-
-    function hideSplash() {
-        const s = document.getElementById("splash");
-        if (!s) return;
-        s.style.opacity = "0";
-        s.style.pointerEvents = "none";
-        setTimeout(() => { s.style.display = "none"; }, 750);
-    }
-
-    function navigateHome() {
-        window.onbeforeunload = null;
-        window.location.href = "/";
-    }
-
-    window.setSplashMsg = setSplashMsg;
-    window.hideSplash = hideSplash;
-    window.navigateHome = navigateHome;
-
-    (function() {
-        var splash = document.getElementById('splash');
-        if (!splash) return;
-        function onGesture() {
-            if (window.MM) window.MM.UME = true;
-            var canvas = document.querySelector('canvas.emscripten');
-            if (canvas) canvas.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
-        }
-        ['click','touchstart','pointerdown'].forEach(function(t) {
-            splash.addEventListener(t, onGesture, {once: true, passive: true});
-        });
-    })();
 
     </script>
 
