@@ -181,8 +181,7 @@ function show_infobox() {
     <title>test_giochino.codex</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="height=device-height, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes"/>
 
@@ -405,6 +404,17 @@ frameborder="1"
         }
     }
 
+    function tdWatchCanvasRendering() {
+        var canvas = document.getElementById("canvas");
+        if (!canvas) return;
+        var observer = new MutationObserver(function() {
+            if (canvas.style.imageRendering !== "pixelated") {
+                canvas.style.imageRendering = "pixelated";
+            }
+        });
+        observer.observe(canvas, { attributes: true, attributeFilter: ["style", "width", "height"] });
+    }
+
     function applyTowerDefenseCanvasScale() {
         const canvas = document.getElementById("canvas");
         if (!canvas) {
@@ -422,7 +432,7 @@ frameborder="1"
         canvas.dataset.tdBaseHeight = String(TD_BASE_HEIGHT);
         canvas.dataset.tdCssWidth = String(w);
         canvas.dataset.tdCssHeight = String(h);
-        canvas.style.imageRendering = dpr > 1 ? "auto" : "pixelated";
+        canvas.style.imageRendering = "pixelated";
         applyTouchMetadata();
     }
 
@@ -444,6 +454,7 @@ frameborder="1"
 
         show_infobox()
         applyTowerDefenseCanvasScale()
+        tdWatchCanvasRendering()
 
         window.addEventListener("resize", applyTouchMetadata);
         window.addEventListener("orientationchange", applyTouchMetadata);
