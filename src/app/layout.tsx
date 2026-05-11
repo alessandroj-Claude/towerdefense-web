@@ -60,6 +60,12 @@ export default function RootLayout({
                 Play
               </Link>
               <Link
+                href="/leaderboard"
+                className="rounded-full px-3 py-1.5 text-neutral-700 transition hover:bg-neutral-100 hover:text-neutral-900"
+              >
+                Leaderboard
+              </Link>
+              <Link
                 href="/news"
                 className="rounded-full px-3 py-1.5 text-neutral-700 transition hover:bg-neutral-100 hover:text-neutral-900"
               >

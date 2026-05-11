@@ -89,3 +89,23 @@ export async function getProfileStats(
     headers: { Authorization: `Bearer ${token}` },
   });
 }
+
+export type LeaderboardEntry = {
+  username: string;
+  score: number;
+  wave: number;
+  difficulty: string;
+  version?: string | null;
+  mutators?: string[];
+  score_mult?: number;
+  created_at?: string | null;
+};
+
+export async function getLeaderboard(
+  difficulty: string = "normal",
+  limit: number = 20
+): Promise<LeaderboardEntry[] | null> {
+  return fetchJson<LeaderboardEntry[]>(
+    `${BACKEND_URL}/leaderboard/global?difficulty=${encodeURIComponent(difficulty)}&limit=${limit}`
+  );
+}
