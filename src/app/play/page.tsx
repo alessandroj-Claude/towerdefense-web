@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 export default function PlayPage() {
@@ -16,12 +17,12 @@ export default function PlayPage() {
           <p className="text-sm text-red-400">
             Errore runtime: impossibile caricare la build web.
           </p>
-          <a
+          <Link
             href="/"
             className="inline-flex h-9 items-center justify-center rounded-full bg-neutral-800 px-4 text-xs font-semibold text-white transition hover:bg-neutral-700"
           >
             ← Torna alla home
-          </a>
+          </Link>
         </div>
       ) : (
         <>
@@ -32,12 +33,12 @@ export default function PlayPage() {
             allow="fullscreen; autoplay; clipboard-read; clipboard-write"
             onError={() => setHasError(true)}
           />
-          <a
+          <Link
             href="/"
             className="absolute left-3 top-3 z-10 inline-flex h-8 items-center justify-center rounded-full bg-black/60 px-3 text-xs font-semibold text-white backdrop-blur-sm transition hover:bg-black/80"
           >
             ← Home
-          </a>
+          </Link>
         </>
       )}
     </main>
