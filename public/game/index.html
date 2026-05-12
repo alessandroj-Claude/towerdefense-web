@@ -181,7 +181,8 @@ function show_infobox() {
     <title>test_giochino.codex</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="height=device-height, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes"/>
 
@@ -284,63 +285,6 @@ function show_infobox() {
     </script>
 
     <script src="https://pygame-web.github.io/cdn/0.9.3//browserfs.min.js"></script>
-
-    <script type="application/javascript">
-    // Tower Defense HiDPI / touch helpers — v8.6
-
-    const TD_BASE_WIDTH = 1280;
-    const TD_BASE_HEIGHT = 720;
-
-    function towerDefenseDpr() {
-        if (typeof window === "undefined") return 1;
-        const raw = window.devicePixelRatio || 1;
-        return Math.min(raw, 2);
-    }
-
-    function applyTowerDefenseCanvasScale() {
-        const canvas = document.getElementById("canvas");
-        if (!canvas) return;
-        const dpr = towerDefenseDpr();
-        const w = Math.round(TD_BASE_WIDTH * dpr);
-        const h = Math.round(TD_BASE_HEIGHT * dpr);
-        canvas.style.imageRendering = "pixelated";
-        canvas.dataset.tdDpr = String(dpr);
-        canvas.dataset.tdBaseWidth = String(TD_BASE_WIDTH);
-        canvas.dataset.tdBaseHeight = String(TD_BASE_HEIGHT);
-        canvas.dataset.tdCssWidth = String(w);
-        canvas.dataset.tdCssHeight = String(h);
-        applyTouchMetadata(canvas);
-    }
-
-    function applyTouchMetadata(canvas) {
-        const touch = navigator.maxTouchPoints > 0 || "ontouchstart" in window;
-        const portrait = window.innerHeight >= window.innerWidth;
-        const body = document.body;
-        if (touch) body.classList.add("td-touch"); else body.classList.remove("td-touch");
-        body.classList.toggle("td-portrait", portrait);
-        body.classList.toggle("td-landscape", !portrait);
-        if (canvas) {
-            canvas.dataset.tdTouch = String(touch);
-            canvas.dataset.tdOrientation = portrait ? "portrait" : "landscape";
-            canvas.dataset.tdViewportWidth = String(window.innerWidth);
-            canvas.dataset.tdViewportHeight = String(window.innerHeight);
-        }
-    }
-
-    function tdWatchCanvasRendering() {
-        const canvas = document.getElementById("canvas");
-        if (!canvas) return;
-        const observer = new MutationObserver(function() {
-            if (canvas.style.imageRendering !== "pixelated") {
-                canvas.style.imageRendering = "pixelated";
-            }
-        });
-        observer.observe(canvas, { attributes: true, attributeFilter: ["style", "width", "height"] });
-    }
-
-    window.addEventListener("resize", function() { applyTowerDefenseCanvasScale(); });
-    window.addEventListener("orientationchange", function() { applyTowerDefenseCanvasScale(); });
-    </script>
 
 </head>
 
@@ -445,8 +389,6 @@ frameborder="1"
         box.hidden =  debug_hidden
 
         show_infobox()
-        applyTowerDefenseCanvasScale()
-        tdWatchCanvasRendering()
     }
 
     function custom_prerun(){
