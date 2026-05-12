@@ -36,34 +36,17 @@ export default function PlayPage() {
             onError={() => setHasError(true)}
           />
 
-          {/* Overlay container: transparent, non-interactive by default */}
-          <div className="pointer-events-none fixed inset-0 flex flex-col gap-3 p-3">
-            {/* Auth state bar */}
-            <div className="pointer-events-auto flex items-center justify-between rounded-full bg-black/60 px-3 py-2 text-xs font-medium text-white backdrop-blur-sm">
-              {authState ? (
-                <>
-                  <span>Playing as {authState.username}</span>
-                  <Link
-                    href="/account"
-                    className="ml-2 rounded-full bg-white/20 px-2 py-1 text-xs transition hover:bg-white/30"
-                  >
-                    Account
-                  </Link>
-                </>
-              ) : (
-                <Link
-                  href="/account"
-                  className="rounded-full bg-white/20 px-2 py-1 text-xs transition hover:bg-white/30"
-                >
-                  Account
-                </Link>
-              )}
-            </div>
-
-            {/* Home button */}
+          {/* Overlay: small buttons top-right only */}
+          <div className="pointer-events-none fixed right-3 top-3 flex flex-col items-end gap-2">
+            <Link
+              href="/account"
+              className="pointer-events-auto rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm transition hover:bg-black/80"
+            >
+              {authState ? authState.username : "Account"}
+            </Link>
             <Link
               href="/"
-              className="pointer-events-auto inline-flex h-8 items-center justify-center rounded-full bg-black/60 px-3 text-xs font-semibold text-white backdrop-blur-sm transition hover:bg-black/80"
+              className="pointer-events-auto rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm transition hover:bg-black/80"
             >
               ← Home
             </Link>
