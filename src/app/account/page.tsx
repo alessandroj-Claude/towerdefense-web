@@ -1,8 +1,37 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { login, register, getSavesMeta, getAuthMe, getProfileStats, getUserRuns, type LeaderboardEntry } from "@/lib/api";
+import { login, register, getSavesMeta, getAuthMe, getProfileStats, getUserRuns, getAchievements, type LeaderboardEntry } from "@/lib/api";
 import { getAuthState, setAuthState, clearAuthState, type AuthState } from "@/lib/auth";
+
+// Achievement catalog
+const ACHIEVEMENT_CATALOG = [
+  { id: "first_blood", name: "First Blood", icon: "⚔️", hidden: false, description: "Completa la tua prima wave" },
+  { id: "survivor_10", name: "Survivor", icon: "🛡️", hidden: false, description: "Raggiungi wave 10" },
+  { id: "survivor_25", name: "Veteran", icon: "🏅", hidden: false, description: "Raggiungi wave 25" },
+  { id: "survivor_50", name: "Elite", icon: "🏆", hidden: false, description: "Raggiungi wave 50" },
+  { id: "endless_start", name: "Into the Void", icon: "∞", hidden: false, description: "Completa una run Endless" },
+  { id: "endless_wave_20", name: "Endless Runner", icon: "🌀", hidden: false, description: "Sopravvivi a wave 20 in Endless" },
+  { id: "endless_wave_50", name: "Infinity Walker", icon: "💫", hidden: true, description: "Sopravvivi a wave 50 in Endless" },
+  { id: "score_10k", name: "High Scorer", icon: "💰", hidden: false, description: "Raggiungi score 10.000" },
+  { id: "score_50k", name: "Score Master", icon: "💎", hidden: true, description: "Raggiungi score 50.000" },
+  { id: "no_lives_lost", name: "Flawless", icon: "✨", hidden: false, description: "Vinci una wave senza perdere vite" },
+  { id: "full_lives_win", name: "Perfect Run", icon: "👑", hidden: false, description: "Completa run con vite al massimo" },
+  { id: "hard_mode", name: "Hardcore", icon: "🔥", hidden: false, description: "Completa una run in Hard" },
+  { id: "synergy_active", name: "Synergist", icon: "🔗", hidden: false, description: "Attiva una synergy tra torri" },
+  { id: "all_synergies", name: "Grand Synergist", icon: "🌟", hidden: true, description: "Attiva tutte e 6 le synergy in una run" },
+  { id: "sell_tower", name: "Trader", icon: "💱", hidden: false, description: "Vendi una torre" },
+  { id: "max_upgrade", name: "Maxed Out", icon: "⬆️", hidden: false, description: "Porta una torre al livello massimo" },
+  { id: "boss_kill", name: "Boss Slayer", icon: "🗡️", hidden: false, description: "Sconfiggi un boss" },
+  { id: "boss_no_lives_lost", name: "Untouchable", icon: "🛡", hidden: true, description: "Sconfiggi un boss senza perdere vite in quella wave" },
+  { id: "daily_complete", name: "Daily Grind", icon: "📅", hidden: false, description: "Completa una Daily Challenge" },
+  { id: "weekly_complete", name: "Weekly Warrior", icon: "📆", hidden: false, description: "Completa una Weekly Challenge" },
+  { id: "repair_tower", name: "Field Engineer", icon: "🔧", hidden: false, description: "Ripara una torre" },
+  { id: "use_powerup", name: "Power User", icon: "⚡", hidden: false, description: "Usa un powerup" },
+  { id: "place_10_towers", name: "Builder", icon: "🏗️", hidden: false, description: "Piazza 10 torri in una run" },
+  { id: "mutator_run", name: "Mutator", icon: "🎲", hidden: false, description: "Completa una run con almeno un mutator attivo" },
+  { id: "comeback", name: "Comeback Kid", icon: "❤️", hidden: false, description: "Vinci una wave con una sola vita rimasta" },
+];
 
 export default function AccountPage() {
   const [authState, setAuthStateLocal] = useState<AuthState | null>(null);
@@ -15,15 +44,17 @@ export default function AccountPage() {
   const [meData, setMeData] = useState<{ user_id: number; username: string; is_admin: boolean; dlcs: string[] } | null>(null);
   const [statsData, setStatsData] = useState<unknown>(null);
   const [userRuns, setUserRuns] = useState<LeaderboardEntry[] | null>(null);
+  const [achievements, setAchievements] = useState<string[] | null>(null);
   const [backendUnavailable, setBackendUnavailable] = useState(false);
 
   const refreshData = async (auth: AuthState) => {
     setBackendUnavailable(false);
-    const [meta, me, stats, runs] = await Promise.all([
+    const [meta, me, stats, runs, achs] = await Promise.all([
       getSavesMeta(auth.userId, auth.token),
       getAuthMe(auth.token),
       getProfileStats(auth.token),
       getUserRuns(auth.userId, auth.token, 10),
+      getAchievements(auth.userId, auth.token),
     ]);
 
     if (meta === null && me === null) {
@@ -33,6 +64,7 @@ export default function AccountPage() {
       setMeData(me);
       setStatsData(stats);
       setUserRuns(runs);
+      setAchievements(achs);
     }
   };
 
@@ -83,6 +115,7 @@ export default function AccountPage() {
     setMeData(null);
     setStatsData(null);
     setUserRuns(null);
+    setAchievements(null);
     setError("");
   }
 
@@ -295,6 +328,56 @@ export default function AccountPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+      </div>
+
+      {/* Achievements */}
+      <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+        <p className="text-sm font-medium text-neutral-700 mb-4">Obiettivi</p>
+        {achievements === null ? (
+          <p className="text-sm text-neutral-500">Caricamento...</p>
+        ) : (
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-5">
+            {ACHIEVEMENT_CATALOG.map((ach) => {
+              const unlocked = achievements.includes(ach.id);
+              return (
+                <div
+                  key={ach.id}
+                  className={`group relative flex flex-col items-center justify-center rounded-lg p-3 transition ${
+                    unlocked
+                      ? "bg-gradient-to-br from-yellow-50 to-amber-50"
+                      : "bg-neutral-100"
+                  }`}
+                  title={unlocked ? ach.description : ""}
+                >
+                  {/* Achievement Badge */}
+                  <div
+                    className={`flex items-center justify-center rounded-md w-12 h-12 text-2xl transition ${
+                      unlocked ? "bg-white shadow-sm" : "bg-neutral-200 text-neutral-400"
+                    }`}
+                  >
+                    {unlocked ? ach.icon : "?"}
+                  </div>
+
+                  {/* Name */}
+                  <p
+                    className={`mt-2 text-xs font-medium text-center transition line-clamp-2 ${
+                      unlocked ? "text-neutral-900" : "text-neutral-500"
+                    }`}
+                  >
+                    {ach.name}
+                  </p>
+
+                  {/* Tooltip on hover */}
+                  {unlocked && (
+                    <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 hidden group-hover:block bg-neutral-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10 pointer-events-none">
+                      {ach.description}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

@@ -122,3 +122,16 @@ export async function getUserRuns(
     }
   );
 }
+
+export async function getAchievements(
+  userId: number,
+  token: string
+): Promise<string[]> {
+  const res = await fetchJson<string[]>(
+    `${BACKEND_URL}/achievements/${userId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res || [];
+}
