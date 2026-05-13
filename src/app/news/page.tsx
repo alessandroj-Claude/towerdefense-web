@@ -1,22 +1,37 @@
-const updates = [
+type NewsEntry = {
+  date: string;
+  version?: string;
+  title: string;
+  body: string;
+};
+
+const FALLBACK_NEWS: NewsEntry[] = [
   {
-    date: "2026-05-05",
-    title: "Dominio live",
-    body: "Il sito ufficiale e' online su towerdefense-cj.online con deploy automatico su Vercel.",
-  },
-  {
-    date: "2026-05-05",
-    title: "Landing minimale pubblicata",
-    body: "Homepage essenziale pubblicata con struttura pronta per Play, aggiornamenti e roadmap.",
-  },
-  {
-    date: "2026-05-05",
-    title: "Prossimo step",
-    body: "In arrivo pagina /play con integrazione della futura build web del gioco.",
+    date: "2026-05-13",
+    title: "Aggiornamenti in caricamento",
+    body: "Impossibile caricare le news. Riprova più tardi.",
   },
 ];
 
-export default function NewsPage() {
+async function getNews(): Promise<NewsEntry[]> {
+  try {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+      "https://towerdefense-cj.online";
+    const res = await fetch(`${baseUrl}/news.json`, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return FALLBACK_NEWS;
+    const data: unknown = await res.json();
+    return Array.isArray(data) ? (data as NewsEntry[]) : FALLBACK_NEWS;
+  } catch {
+    return FALLBACK_NEWS;
+  }
+}
+
+export default async function NewsPage() {
+  const news = await getNews();
+
   return (
     <main className="min-h-screen bg-neutral-50 px-6 py-16 text-neutral-900 sm:px-10">
       <div className="mx-auto max-w-4xl">
@@ -27,19 +42,31 @@ export default function NewsPage() {
           Aggiornamenti progetto
         </h1>
         <p className="mt-4 max-w-2xl text-base leading-7 text-neutral-600">
-          Diario rapido di avanzamento del sito e della futura versione web del
-          gioco.
+          Diario di avanzamento del gioco e del sito.
         </p>
 
         <div className="mt-10 space-y-4">
-          {updates.map((update) => (
+          {news.map((entry) => (
             <article
-              key={`${update.date}-${update.title}`}
+              key={`${entry.date}-${entry.title}`}
               className="rounded-2xl border border-neutral-200 bg-white p-6"
             >
-              <p className="text-sm text-neutral-500">{update.date}</p>
-              <h2 className="mt-2 text-xl font-semibold">{update.title}</h2>
-              <p className="mt-2 text-neutral-700">{update.body}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-neutral-500">
+                  {new Date(entry.date).toLocaleDateString("it-IT", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+                {entry.version && (
+                  <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-600">
+                    {entry.version}
+                  </span>
+                )}
+              </div>
+              <h2 className="mt-2 text-xl font-semibold">{entry.title}</h2>
+              <p className="mt-2 text-neutral-700">{entry.body}</p>
             </article>
           ))}
         </div>
