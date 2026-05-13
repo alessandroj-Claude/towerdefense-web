@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
@@ -10,13 +11,6 @@
   --color-foreground: var(--foreground);
   --font-sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
   --font-mono: "SF Mono", Menlo, Monaco, monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
