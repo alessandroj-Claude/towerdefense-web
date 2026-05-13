@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import NavLinks from "@/app/components/NavLinks";
+import { ThemeProvider } from "@/app/components/ThemeProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -50,16 +51,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-neutral-50 text-neutral-900">
-        <header className="border-b border-neutral-200 bg-white/90 backdrop-blur">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem("td.theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(s==="dark"||(!s&&d))document.documentElement.classList.add("dark");}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+        <header className="border-b border-neutral-200 bg-white/90 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/90">
           <nav className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4 sm:px-10">
-            <Link href="/" className="text-sm font-semibold tracking-tight">
+            <Link href="/" className="text-sm font-semibold tracking-tight dark:text-neutral-100">
               Tower Defense CJ
             </Link>
             <NavLinks />
           </nav>
         </header>
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
