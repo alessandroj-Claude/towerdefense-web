@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
+import NavLinks from "@/app/components/NavLinks";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -55,38 +56,7 @@ export default function RootLayout({
             <Link href="/" className="text-sm font-semibold tracking-tight">
               Tower Defense CJ
             </Link>
-            <div className="flex items-center gap-2 text-sm">
-              <Link
-                href="/"
-                className="rounded-full px-3 py-1.5 text-neutral-700 transition hover:bg-neutral-100 hover:text-neutral-900"
-              >
-                Home
-              </Link>
-              <Link
-                href="/play"
-                className="rounded-full px-3 py-1.5 text-neutral-700 transition hover:bg-neutral-100 hover:text-neutral-900"
-              >
-                Play
-              </Link>
-              <Link
-                href="/leaderboard"
-                className="rounded-full px-3 py-1.5 text-neutral-700 transition hover:bg-neutral-100 hover:text-neutral-900"
-              >
-                Leaderboard
-              </Link>
-              <Link
-                href="/news"
-                className="rounded-full px-3 py-1.5 text-neutral-700 transition hover:bg-neutral-100 hover:text-neutral-900"
-              >
-                News
-              </Link>
-              <Link
-                href="/account"
-                className="rounded-full px-3 py-1.5 text-neutral-700 transition hover:bg-neutral-100 hover:text-neutral-900"
-              >
-                Account
-              </Link>
-            </div>
+            <NavLinks />
           </nav>
         </header>
         {children}
