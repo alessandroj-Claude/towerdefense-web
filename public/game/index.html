@@ -181,8 +181,7 @@ function show_infobox() {
     <title>test_giochino.codex</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="height=device-height, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes"/>
 
@@ -376,6 +375,72 @@ frameborder="1"
     globalThis.__canvas_resized = (self, ecw, ech) => {
         console.warn("TODO: panda3d canvas monitor", self, ecw, ech)
     }
+
+
+function towerDefenseDpr() {
+    var raw = Number(window.devicePixelRatio || 1);
+    if (!raw || raw < 1) {
+        return 1;
+    }
+    return Math.min(raw, 2);
+}
+
+function tdIsTouch() {
+    return Boolean(
+        ("ontouchstart" in window) ||
+        (navigator.maxTouchPoints && navigator.maxTouchPoints > 0)
+    );
+}
+
+function applyTouchMetadata(canvas) {
+    if (!canvas || !document.body) {
+        return;
+    }
+    var isTouch = tdIsTouch();
+    var orientation = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
+    document.body.classList.toggle("td-touch", isTouch);
+    document.body.classList.toggle("td-portrait", orientation === "portrait");
+    document.body.classList.toggle("td-landscape", orientation === "landscape");
+    canvas.dataset.tdTouch = String(isTouch);
+    canvas.dataset.tdOrientation = orientation;
+    canvas.dataset.tdViewportWidth = String(window.innerWidth);
+    canvas.dataset.tdViewportHeight = String(window.innerHeight);
+}
+
+function applyTowerDefenseCanvasScale() {
+    var canvas = document.getElementById("canvas");
+    if (!canvas) {
+        return;
+    }
+    var dpr = towerDefenseDpr();
+    var TD_BASE_WIDTH = 1280;
+    var TD_BASE_HEIGHT = 720;
+    var w = Math.min(window.innerWidth, TD_BASE_WIDTH);
+    var h = Math.min(window.innerHeight, TD_BASE_HEIGHT);
+    canvas.style.imageRendering = "pixelated";
+    canvas.dataset.tdDpr = String(dpr);
+    canvas.dataset.tdBaseWidth = String(TD_BASE_WIDTH);
+    canvas.dataset.tdBaseHeight = String(TD_BASE_HEIGHT);
+    canvas.dataset.tdCssWidth = String(w);
+    canvas.dataset.tdCssHeight = String(h);
+    applyTouchMetadata(canvas);
+}
+
+function tdWatchCanvasRendering() {
+    var canvas = document.getElementById("canvas");
+    if (!canvas || typeof MutationObserver === "undefined") {
+        return;
+    }
+    var observer = new MutationObserver(function() {
+        if (canvas.style.imageRendering !== "pixelated") {
+            canvas.style.imageRendering = "pixelated";
+        }
+    });
+    observer.observe(canvas, { attributes: true, attributeFilter: ["style", "width", "height"] });
+}
+
+window.addEventListener("resize", applyTowerDefenseCanvasScale);
+window.addEventListener("orientationchange", applyTowerDefenseCanvasScale);
 
     async function custom_onload(debug_hidden) {
         // this is called before anything python is loaded
