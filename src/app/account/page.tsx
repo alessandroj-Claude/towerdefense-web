@@ -33,6 +33,13 @@ const ACHIEVEMENT_CATALOG = [
   { id: "comeback", name: "Comeback Kid", icon: "❤️", hidden: false, description: "Vinci una wave con una sola vita rimasta" },
 ];
 
+const BADGE_LABELS: Record<string, string> = {
+  first_run: "Prima run",
+  wave_10: "Wave 10",
+  hard_survivor: "Hard",
+  mutator_trial: "Mutator",
+};
+
 export default function AccountPage() {
   const [authState, setAuthStateLocal] = useState<AuthState | null>(null);
   const [loading, setLoading] = useState(true);
@@ -282,17 +289,41 @@ export default function AccountPage() {
         <div className="rounded-2xl border border-neutral-200 bg-white p-6">
           <p className="text-sm text-neutral-500">Profile Stats</p>
           {backendUnavailable ? (
-            <p className="mt-2 text-sm text-neutral-600">
-              Backend unavailable — try again later
-            </p>
+            <p className="mt-2 text-sm text-neutral-600">Backend non raggiungibile</p>
           ) : statsData ? (
-            <p className="mt-2 text-sm text-neutral-900">
-              {JSON.stringify(statsData).slice(0, 60)}...
-            </p>
+            <div className="mt-3 space-y-3">
+              {/* Level + XP row */}
+              <div className="flex items-baseline justify-between">
+                <span className="text-2xl font-bold text-neutral-900">Lv. {statsData.level}</span>
+                <span className="text-sm text-neutral-500">{statsData.total_xp.toLocaleString()} XP</span>
+              </div>
+              {/* Divider */}
+              <div className="border-t border-neutral-100" />
+              {/* Stats grid */}
+              <div className="grid grid-cols-2 gap-y-1 text-sm">
+                <span className="text-neutral-500">Partite</span>
+                <span className="font-medium text-neutral-900 text-right">{statsData.runs_played}</span>
+                <span className="text-neutral-500">Best score</span>
+                <span className="font-medium text-neutral-900 text-right">{statsData.best_score.toLocaleString()}</span>
+                <span className="text-neutral-500">Best wave</span>
+                <span className="font-medium text-neutral-900 text-right">{statsData.best_wave}</span>
+              </div>
+              {/* Badges */}
+              {statsData.badges.length > 0 && (
+                <div className="flex flex-wrap gap-1 pt-1">
+                  {statsData.badges.map((badge) => (
+                    <span
+                      key={badge}
+                      className="rounded bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600"
+                    >
+                      {BADGE_LABELS[badge] ?? badge}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
           ) : (
-            <p className="mt-2 text-sm text-neutral-600">
-              Profile stats unavailable
-            </p>
+            <p className="mt-2 text-sm text-neutral-600">Caricamento...</p>
           )}
         </div>
       </div>
