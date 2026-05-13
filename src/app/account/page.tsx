@@ -130,7 +130,7 @@ export default function AccountPage() {
     return (
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-16 sm:px-10">
         <h1 className="text-3xl font-semibold">Account</h1>
-        <p className="text-neutral-600">Loading...</p>
+        <p className="text-neutral-600 dark:text-neutral-400">Loading...</p>
       </main>
     );
   }
@@ -140,14 +140,14 @@ export default function AccountPage() {
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-16 sm:px-10">
         <h1 className="text-3xl font-semibold">Account</h1>
 
-        <div className="max-w-md rounded-2xl border border-neutral-200 bg-white p-6">
-          <div className="mb-6 flex gap-2 border-b border-neutral-200">
+        <div className="max-w-md rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
+          <div className="mb-6 flex gap-2 border-b border-neutral-200 dark:border-neutral-800">
             <button
               onClick={() => setMode("login")}
               className={`pb-3 text-sm font-medium transition ${
                 mode === "login"
-                  ? "border-b-2 border-neutral-900 text-neutral-900"
-                  : "text-neutral-600 hover:text-neutral-800"
+                  ? "border-b-2 border-neutral-900 text-neutral-900 dark:border-neutral-100 dark:text-neutral-100"
+                  : "text-neutral-600 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
               }`}
             >
               Login
@@ -156,8 +156,8 @@ export default function AccountPage() {
               onClick={() => setMode("register")}
               className={`pb-3 text-sm font-medium transition ${
                 mode === "register"
-                  ? "border-b-2 border-neutral-900 text-neutral-900"
-                  : "text-neutral-600 hover:text-neutral-800"
+                  ? "border-b-2 border-neutral-900 text-neutral-900 dark:border-neutral-100 dark:text-neutral-100"
+                  : "text-neutral-600 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
               }`}
             >
               Register
@@ -166,34 +166,34 @@ export default function AccountPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
+              <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700">
+              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 Username
               </label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder-neutral-500 outline-none transition hover:border-neutral-400 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900"
+                className="mt-1 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder-neutral-500 outline-none transition hover:border-neutral-400 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-500 dark:hover:border-neutral-600 dark:focus:border-neutral-100 dark:focus:ring-neutral-100"
                 placeholder="Your username"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700">
+              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 Password
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder-neutral-500 outline-none transition hover:border-neutral-400 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900"
+                className="mt-1 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder-neutral-500 outline-none transition hover:border-neutral-400 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-500 dark:hover:border-neutral-600 dark:focus:border-neutral-100 dark:focus:ring-neutral-100"
                 placeholder="Your password"
                 required
               />
@@ -201,7 +201,7 @@ export default function AccountPage() {
 
             <button
               type="submit"
-              className="w-full rounded-full bg-neutral-900 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"
+              className="w-full rounded-full bg-neutral-900 py-2 text-sm font-medium text-white transition hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
             >
               {mode === "login" ? "Login" : "Register"}
             </button>
@@ -220,12 +220,12 @@ export default function AccountPage() {
 
       <div className="grid gap-6 sm:grid-cols-2">
         {/* Profile Card */}
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
           <p className="text-sm text-neutral-500">Profile</p>
-          <p className="mt-2 text-lg font-semibold text-neutral-900">
+          <p className="mt-2 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
             {authState.username}
             {meData?.is_admin && (
-              <span className="ml-2 text-xs font-medium text-neutral-600">
+              <span className="ml-2 text-xs font-medium text-neutral-600 dark:text-neutral-400">
                 [Admin]
               </span>
             )}
@@ -236,15 +236,15 @@ export default function AccountPage() {
         </div>
 
         {/* Cloud Save Status */}
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
           <p className="text-sm text-neutral-500">Cloud Save</p>
           {backendUnavailable ? (
-            <p className="mt-2 text-sm text-neutral-600">
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
               Backend unavailable — try again later
             </p>
           ) : saveMeta ? (
             <>
-              <p className="mt-2 text-base font-semibold text-neutral-900">
+              <p className="mt-2 text-base font-semibold text-neutral-900 dark:text-neutral-100">
                 {saveMeta.exists ? "Available" : "Not found"}
               </p>
               {saveMeta.updated_at && (
@@ -254,16 +254,16 @@ export default function AccountPage() {
               )}
             </>
           ) : (
-            <p className="mt-2 text-sm text-neutral-600">Loading...</p>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Loading...</p>
           )}
         </div>
 
         {/* DLC Status */}
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
           <p className="text-sm text-neutral-500">DLC</p>
           <div className="mt-3 space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-neutral-700">Storm Pack</span>
+              <span className="text-neutral-700 dark:text-neutral-300">Storm Pack</span>
               <span
                 className={`text-xs font-medium ${
                   dlcStormActive ? "text-green-600" : "text-neutral-500"
@@ -273,7 +273,7 @@ export default function AccountPage() {
               </span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-neutral-700">Inferno Pack</span>
+              <span className="text-neutral-700 dark:text-neutral-300">Inferno Pack</span>
               <span
                 className={`text-xs font-medium ${
                   dlcInfernoActive ? "text-green-600" : "text-neutral-500"
@@ -286,27 +286,27 @@ export default function AccountPage() {
         </div>
 
         {/* Stats */}
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
           <p className="text-sm text-neutral-500">Profile Stats</p>
           {backendUnavailable ? (
-            <p className="mt-2 text-sm text-neutral-600">Backend non raggiungibile</p>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Backend non raggiungibile</p>
           ) : statsData ? (
             <div className="mt-3 space-y-3">
               {/* Level + XP row */}
               <div className="flex items-baseline justify-between">
-                <span className="text-2xl font-bold text-neutral-900">Lv. {statsData.level}</span>
+                <span className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">Lv. {statsData.level}</span>
                 <span className="text-sm text-neutral-500">{statsData.total_xp.toLocaleString()} XP</span>
               </div>
               {/* Divider */}
-              <div className="border-t border-neutral-100" />
+              <div className="border-t border-neutral-100 dark:border-neutral-800" />
               {/* Stats grid */}
               <div className="grid grid-cols-2 gap-y-1 text-sm">
                 <span className="text-neutral-500">Partite</span>
-                <span className="font-medium text-neutral-900 text-right">{statsData.runs_played}</span>
+                <span className="font-medium text-neutral-900 text-right dark:text-neutral-100">{statsData.runs_played}</span>
                 <span className="text-neutral-500">Best score</span>
-                <span className="font-medium text-neutral-900 text-right">{statsData.best_score.toLocaleString()}</span>
+                <span className="font-medium text-neutral-900 text-right dark:text-neutral-100">{statsData.best_score.toLocaleString()}</span>
                 <span className="text-neutral-500">Best wave</span>
-                <span className="font-medium text-neutral-900 text-right">{statsData.best_wave}</span>
+                <span className="font-medium text-neutral-900 text-right dark:text-neutral-100">{statsData.best_wave}</span>
               </div>
               {/* Badges */}
               {statsData.badges.length > 0 && (
@@ -314,7 +314,7 @@ export default function AccountPage() {
                   {statsData.badges.map((badge) => (
                     <span
                       key={badge}
-                      className="rounded bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600"
+                      className="rounded bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
                     >
                       {BADGE_LABELS[badge] ?? badge}
                     </span>
@@ -323,14 +323,14 @@ export default function AccountPage() {
               )}
             </div>
           ) : (
-            <p className="mt-2 text-sm text-neutral-600">Caricamento...</p>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Caricamento...</p>
           )}
         </div>
       </div>
 
       {/* Run History */}
       <div className="rounded-2xl border border-neutral-200 bg-white p-6">
-        <p className="text-sm font-medium text-neutral-700 mb-3">Partite recenti</p>
+        <p className="text-sm font-medium text-neutral-700 mb-3 dark:text-neutral-300">Partite recenti</p>
         {userRuns === null ? (
           <p className="text-sm text-neutral-500">Storico non disponibile</p>
         ) : userRuns.length === 0 ? (
@@ -339,7 +339,7 @@ export default function AccountPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-neutral-100 text-left text-xs text-neutral-500">
+                <tr className="border-b border-neutral-100 text-left text-xs text-neutral-500 dark:border-neutral-800">
                   <th className="pb-2 pr-4 font-medium">Punti</th>
                   <th className="pb-2 pr-4 font-medium">Onda</th>
                   <th className="pb-2 pr-4 font-medium">Difficoltà</th>
@@ -348,10 +348,10 @@ export default function AccountPage() {
               </thead>
               <tbody>
                 {userRuns.map((run, i) => (
-                  <tr key={i} className="border-b border-neutral-50 last:border-0">
-                    <td className="py-2 pr-4 font-semibold text-neutral-900">{run.score.toLocaleString()}</td>
-                    <td className="py-2 pr-4 text-neutral-700">{run.wave}</td>
-                    <td className="py-2 pr-4 text-neutral-700 capitalize">{run.difficulty}</td>
+                  <tr key={i} className="border-b border-neutral-50 last:border-0 dark:border-neutral-800">
+                    <td className="py-2 pr-4 font-semibold text-neutral-900 dark:text-neutral-100">{run.score.toLocaleString()}</td>
+                    <td className="py-2 pr-4 text-neutral-700 dark:text-neutral-300">{run.wave}</td>
+                    <td className="py-2 pr-4 text-neutral-700 capitalize dark:text-neutral-300">{run.difficulty}</td>
                     <td className="py-2 text-neutral-500">
                       {run.created_at ? new Date(run.created_at).toLocaleDateString("it-IT") : "—"}
                     </td>
@@ -365,7 +365,7 @@ export default function AccountPage() {
 
       {/* Achievements */}
       <div className="rounded-2xl border border-neutral-200 bg-white p-6">
-        <p className="text-sm font-medium text-neutral-700 mb-4">Obiettivi</p>
+        <p className="text-sm font-medium text-neutral-700 mb-4 dark:text-neutral-300">Obiettivi</p>
         {achievements === null ? (
           <p className="text-sm text-neutral-500">Caricamento...</p>
         ) : (
@@ -377,15 +377,15 @@ export default function AccountPage() {
                   key={ach.id}
                   className={`group relative flex flex-col items-center justify-center rounded-lg p-3 transition ${
                     unlocked
-                      ? "bg-gradient-to-br from-yellow-50 to-amber-50"
-                      : "bg-neutral-100"
+                      ? "bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-950 dark:to-amber-950"
+                      : "bg-neutral-100 dark:bg-neutral-800"
                   }`}
                   title={unlocked ? ach.description : ""}
                 >
                   {/* Achievement Badge */}
                   <div
                     className={`flex items-center justify-center rounded-md w-12 h-12 text-2xl transition ${
-                      unlocked ? "bg-white shadow-sm" : "bg-neutral-200 text-neutral-400"
+                      unlocked ? "bg-white shadow-sm dark:bg-neutral-800" : "bg-neutral-200 text-neutral-400 dark:bg-neutral-700"
                     }`}
                   >
                     {unlocked ? ach.icon : "?"}
@@ -394,7 +394,7 @@ export default function AccountPage() {
                   {/* Name */}
                   <p
                     className={`mt-2 text-xs font-medium text-center transition line-clamp-2 ${
-                      unlocked ? "text-neutral-900" : "text-neutral-500"
+                      unlocked ? "text-neutral-900 dark:text-neutral-100" : "text-neutral-500"
                     }`}
                   >
                     {ach.name}
@@ -419,13 +419,13 @@ export default function AccountPage() {
           onClick={() => {
             if (authState) refreshData(authState);
           }}
-          className="rounded-full border border-neutral-300 bg-white px-6 py-2 text-sm font-medium text-neutral-800 transition hover:border-neutral-400"
+          className="rounded-full border border-neutral-300 bg-white px-6 py-2 text-sm font-medium text-neutral-800 transition hover:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:border-neutral-600"
         >
           Refresh
         </button>
         <button
           onClick={handleLogout}
-          className="rounded-full bg-neutral-900 px-6 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"
+          className="rounded-full bg-neutral-900 px-6 py-2 text-sm font-medium text-white transition hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
         >
           Logout
         </button>

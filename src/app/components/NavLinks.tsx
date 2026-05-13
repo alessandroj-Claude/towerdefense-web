@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getAuthState } from "@/lib/auth";
+import { ThemeToggle } from "./ThemeToggle";
 
 const BASE_LINKS = [
   { href: "/", label: "Home" },
@@ -36,14 +37,15 @@ export default function NavLinks() {
             href={href}
             className={`rounded-full px-3 py-1.5 transition ${
               isActive
-                ? "bg-neutral-100 font-medium text-neutral-900"
-                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900"
+                ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100"
+                : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
             }`}
           >
             {label}
           </Link>
         );
       })}
+      <ThemeToggle />
     </div>
   );
 }
