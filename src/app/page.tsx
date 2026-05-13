@@ -13,9 +13,7 @@ export default function Home() {
             Tower Defense CJ
           </h1>
           <p className="max-w-2xl text-lg leading-8 text-neutral-600">
-            Sito ufficiale del progetto. La versione web giocabile e&apos; in
-            arrivo: qui troverai aggiornamenti, changelog e accesso rapido al
-            gioco.
+            Gioca direttamente nel browser, sfida la classifica globale, sblocca achievement e salva i tuoi progressi nel cloud.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <a
@@ -37,22 +35,38 @@ export default function Home() {
           <article className="rounded-2xl border border-neutral-200 bg-white p-5">
             <p className="text-sm text-neutral-500">Web Client</p>
             <p className="mt-2 text-base font-semibold">Online</p>
-            <p className="mt-1 text-sm text-neutral-600">Base landing attiva.</p>
+            <p className="mt-1 text-sm text-neutral-600">Build v8.10 live su Vercel.</p>
           </article>
           <article className="rounded-2xl border border-neutral-200 bg-white p-5">
             <p className="text-sm text-neutral-500">Backend</p>
-            <p className="mt-2 text-base font-semibold">In evoluzione</p>
+            <p className="mt-2 text-base font-semibold">Online</p>
             <p className="mt-1 text-sm text-neutral-600">
-              API e servizi in aggiornamento.
+              FastAPI su Render, Neon PostgreSQL.
             </p>
           </article>
           <article className="rounded-2xl border border-neutral-200 bg-white p-5">
             <p className="text-sm text-neutral-500">Next Milestone</p>
-            <p className="mt-2 text-base font-semibold">Play page</p>
+            <p className="mt-2 text-base font-semibold">v9.x Web</p>
             <p className="mt-1 text-sm text-neutral-600">
-              Integrazione build web del gioco.
+              Navbar, stats, dark mode e news aggiornate.
             </p>
           </article>
+        </section>
+
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            { title: "Wave Defense", desc: "Difendi la base da ondate crescenti di nemici" },
+            { title: "Boss Fights", desc: "Ogni milestone porta un boss con abilità uniche" },
+            { title: "Daily Challenges", desc: "Sfide quotidiane con mappe e modificatori dedicati" },
+            { title: "Classifica Globale", desc: "Confronta il tuo score con tutti i giocatori" },
+            { title: "25 Achievement", desc: "Sblocca traguardi durante le run" },
+            { title: "Cloud Save", desc: "Progressi sincronizzati sul tuo account" },
+          ].map(({ title, desc }) => (
+            <article key={title} className="rounded-2xl border border-neutral-200 bg-white p-5">
+              <p className="text-base font-semibold text-neutral-900">{title}</p>
+              <p className="mt-1 text-sm text-neutral-600">{desc}</p>
+            </article>
+          ))}
         </section>
 
         <footer className="border-t border-neutral-200 pt-6 text-sm text-neutral-500">
