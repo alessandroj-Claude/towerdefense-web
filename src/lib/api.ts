@@ -10,6 +10,15 @@ export type LoginResult = {
   dlcs: string[];
 };
 
+export type ProfileStatsData = {
+  total_xp: number;
+  runs_played: number;
+  best_score: number;
+  best_wave: number;
+  badges: string[];
+  level: number;
+};
+
 async function fetchJson<T>(
   url: string,
   options: RequestInit & { timeout?: number } = {}
@@ -83,8 +92,8 @@ export async function getAuthMe(
 
 export async function getProfileStats(
   token: string
-): Promise<unknown | null> {
-  return fetchJson<unknown>(`${BACKEND_URL}/profile/stats`, {
+): Promise<ProfileStatsData | null> {
+  return fetchJson<ProfileStatsData>(`${BACKEND_URL}/profile/stats`, {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
   });

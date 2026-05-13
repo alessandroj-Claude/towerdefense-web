@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { login, register, getSavesMeta, getAuthMe, getProfileStats, getUserRuns, getAchievements, type LeaderboardEntry } from "@/lib/api";
+import { login, register, getSavesMeta, getAuthMe, getProfileStats, getUserRuns, getAchievements, type LeaderboardEntry, type ProfileStatsData } from "@/lib/api";
 import { getAuthState, setAuthState, clearAuthState, type AuthState } from "@/lib/auth";
 
 // Achievement catalog
@@ -42,7 +42,7 @@ export default function AccountPage() {
   const [error, setError] = useState("");
   const [saveMeta, setSaveMeta] = useState<{ exists: boolean; updated_at?: string } | null>(null);
   const [meData, setMeData] = useState<{ user_id: number; username: string; is_admin: boolean; dlcs: string[] } | null>(null);
-  const [statsData, setStatsData] = useState<unknown>(null);
+  const [statsData, setStatsData] = useState<ProfileStatsData | null>(null);
   const [userRuns, setUserRuns] = useState<LeaderboardEntry[] | null>(null);
   const [achievements, setAchievements] = useState<string[] | null>(null);
   const [backendUnavailable, setBackendUnavailable] = useState(false);
