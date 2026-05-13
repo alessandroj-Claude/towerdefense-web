@@ -1,0 +1,68 @@
+[
+  {
+    "date": "2026-05-12",
+    "version": "v8.10",
+    "title": "Achievement System",
+    "body": "25 traguardi sbloccabili: sopravvivenza, boss, synergy, challenge e altro. Galleria obiettivi nella pagina Account."
+  },
+  {
+    "date": "2026-05-12",
+    "version": "v8.9",
+    "title": "Wave Preview Panel",
+    "body": "Pannello preview durante il countdown di wave: composizione nemici per tipo e avviso boss in arrivo."
+  },
+  {
+    "date": "2026-05-11",
+    "version": "v8.8",
+    "title": "Endless / Survival Mode",
+    "body": "Modalità senza fine con difficoltà crescente esponenziale e leaderboard separata. Quante wave riesci a reggere?"
+  },
+  {
+    "date": "2026-05-11",
+    "version": "v8.7",
+    "title": "Tower Synergy System",
+    "body": "6 coppie di torri con bonus sinergici. Abbina Ice+Sniper, Bomb+Inferno e altre combinazioni per massimizzare il danno."
+  },
+  {
+    "date": "2026-05-11",
+    "version": "v8.6",
+    "title": "PWA e Canvas Retina",
+    "body": "Il sito è ora installabile come PWA (Add to Home Screen). Rendering canvas ottimizzato per display HiDPI."
+  },
+  {
+    "date": "2026-05-11",
+    "version": "v8.5",
+    "title": "Leaderboard Web e Run History",
+    "body": "Classifica globale pubblica su towerdefense-cj.online. Storico delle ultime 10 partite nella pagina Account."
+  },
+  {
+    "date": "2026-05-11",
+    "version": "v8.4",
+    "title": "Account Web e Controlli Mobile",
+    "body": "Login, registrazione e dashboard account online. Supporto controlli touch con bottoni adattivi per mobile."
+  },
+  {
+    "date": "2026-05-11",
+    "version": "v8.3",
+    "title": "Map Preview, Boss Rework e Combat Recap",
+    "body": "Preview mappa pre-run con seed manuale/casuale. Boss con fasi HP e abilità telegrafate. Recap combattimento post-wave."
+  },
+  {
+    "date": "2026-05-11",
+    "version": "v8.2",
+    "title": "Codex, Meta Progression e Mutators",
+    "body": "Enciclopedia torri/nemici/elementi consultabile. Sistema XP e livelli persistenti. Mutator bonus/malus per variare le run."
+  },
+  {
+    "date": "2026-05-11",
+    "version": "v8.1",
+    "title": "Daily e Weekly Challenges",
+    "body": "Sfide giornaliere e settimanali con mappe e modificatori deterministici. Punteggi sfide in classifica separata."
+  },
+  {
+    "date": "2026-05-05",
+    "version": "v7.4",
+    "title": "Dominio live: towerdefense-cj.online",
+    "body": "Il gioco è online. Build web su Vercel, backend su Render. Registrati e salva i tuoi progressi nel cloud."
+  }
+]
