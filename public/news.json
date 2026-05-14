@@ -1,6 +1,12 @@
 [
   {
     "date": "2026-05-14",
+    "version": "v10.1.1",
+    "title": "DLC Token Auth Bugfix",
+    "body": "backend/deps.py: requireauth ora accetta sia JWT moderni (sub) sia token web custom prodotti da /auth/login e /auth/register (userid), normalizzando entrambe le chiavi.."
+  },
+  {
+    "date": "2026-05-14",
     "version": "v10.1",
     "title": "Web Account, News, Health Check, Theme Fix",
     "body": "towerdefense-web/src/app/account/page.tsx: blocco DLC reso cliccabile con input license key e attivazione via POST /dlc/activate; refresh GET /auth/me e update."
@@ -112,11 +118,5 @@
     "version": "v7.5",
     "title": "GUI Resolution + Tile Polish",
     "body": "Grid: 16\u00d712 TILE=56 \u2192 18\u00d710 TILE=64. SCREENW 896\u21921152, SCREENH 1000\u2192968. Upscale factor ridotto: 1.43x \u2192 1.1x. Rimosso image-rendering:pixelated (poi reintrodotto in v7.6). Tile."
-  },
-  {
-    "date": "2026-05-06",
-    "version": "v7.4.1",
-    "title": "DB Cloud Persistence + Web Save/Load Fix",
-    "body": "Postgres esterno free (Neon) con DATABASEURL; fallback SQLite solo locale/dev. Migrazione Postgres completata; persistenza utenti e save/load confermata post-deploy/redeploy.."
   }
 ]
