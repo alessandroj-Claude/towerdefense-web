@@ -59,15 +59,17 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
-        <header className="border-b border-neutral-200 bg-white/90 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/90">
-          <nav className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4 sm:px-10">
-            <Link href="/" className="text-sm font-semibold tracking-tight dark:text-neutral-100">
-              Tower Defense CJ
-            </Link>
-            <NavLinks />
-          </nav>
-        </header>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <header className="border-b border-neutral-200 bg-white/90 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/90">
+            <nav className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4 sm:px-10">
+              <Link href="/" className="text-sm font-semibold tracking-tight dark:text-neutral-100">
+                Tower Defense CJ
+              </Link>
+              <NavLinks />
+            </nav>
+          </header>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

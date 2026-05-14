@@ -19,7 +19,9 @@ export default function NavLinks() {
 
   useEffect(() => {
     const auth = getAuthState();
-    if (auth?.username) setAccountLabel(auth.username);
+    if (!auth?.username) return;
+    const id = window.setTimeout(() => setAccountLabel(auth.username), 0);
+    return () => window.clearTimeout(id);
   }, []);
 
   const links = BASE_LINKS.map((l) =>
