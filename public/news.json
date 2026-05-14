@@ -1,68 +1,122 @@
 [
   {
+    "date": "2026-05-13",
+    "version": "v10.0",
+    "title": "Architecture Maintenance Pass",
+    "body": "src/gametutorial.py: nuovo modulo per TUTORIALSTEPS, persistenza tutorialdone e avanzamento step; src/game.py mantiene solo wiring runtime e wrapper."
+  },
+  {
+    "date": "2026-05-13",
+    "version": "v9.9",
+    "title": "Tutorial",
+    "body": "src/game.py: tutorial first-run per utenti anonimi desktop, con TUTORIALSTEPS, stato tutorialstep, helper di persistenza tutorialdone, avanzamento manuale/skip e avanzamento."
+  },
+  {
     "date": "2026-05-12",
     "version": "v8.10",
     "title": "Achievement System",
-    "body": "25 traguardi sbloccabili: sopravvivenza, boss, synergy, challenge e altro. Galleria obiettivi nella pagina Account."
+    "body": "src/achievements.py: nuovo modulo puro. Achievement frozen dataclass, ACHIEVEMENTS lista 25 definizioni, getachievement(id), checkrunachievements(runstats) - list[str] (pura,."
   },
   {
     "date": "2026-05-12",
     "version": "v8.9",
     "title": "Wave Preview Panel",
-    "body": "Pannello preview durante il countdown di wave: composizione nemici per tipo e avviso boss in arrivo."
+    "body": "src/wave.py: wavepreview(wavenumber) - dict pura (zero side effects). Ritorna composizione wave: totale nemici, flag boss, lista per tipo con nome/icona/count.."
   },
   {
     "date": "2026-05-11",
     "version": "v8.8",
-    "title": "Endless / Survival Mode",
-    "body": "Modalità senza fine con difficoltà crescente esponenziale e leaderboard separata. Quante wave riesci a reggere?"
+    "title": "Endless/Survival Mode",
+    "body": "src/adaptive.py: ADAPTIVEENDLESSCAPS (hp 5.0/speed 4.0/dmg 4.0), ADAPTIVEENDLESSEXPBASE, isendless() helper. applyadaptiveincrement accetta wave: int = 0; post-wave 30 endless."
   },
   {
     "date": "2026-05-11",
     "version": "v8.7",
     "title": "Tower Synergy System",
-    "body": "6 coppie di torri con bonus sinergici. Abbina Ice+Sniper, Bomb+Inferno e altre combinazioni per massimizzare il danno."
+    "body": "Nuovo modulo src/synergy.py: SynergyEffect frozen dataclass, SYNERGYRULES (6 coppie), getadjacentpairs() (Manhattan==1), computesynergies(), applysynergybonuses(),."
   },
   {
     "date": "2026-05-11",
     "version": "v8.6",
-    "title": "PWA e Canvas Retina",
-    "body": "Il sito è ora installabile come PWA (Add to Home Screen). Rendering canvas ottimizzato per display HiDPI."
+    "title": "Retina Canvas Clarity + PWA",
+    "body": "towerdefense-web/public/game/index.html: Rimosso override bilinear (dpr 1 ? \"auto\") \u2192 imageRendering = \"pixelated\" sempre. Aggiunta tdWatchCanvasRendering() con MutationObserver."
   },
   {
     "date": "2026-05-11",
     "version": "v8.5",
-    "title": "Leaderboard Web e Run History",
-    "body": "Classifica globale pubblica su towerdefense-cj.online. Storico delle ultime 10 partite nella pagina Account."
+    "title": "Web Leaderboard + Run History",
+    "body": "Backend: src/leaderboard.py: top5global e top5user ora accettano limit: int = 20 (era hardcoded 5). backend/leaderboard.py: endpoint GET /leaderboard/global reso pubblico."
   },
   {
     "date": "2026-05-11",
     "version": "v8.4",
-    "title": "Account Web e Controlli Mobile",
-    "body": "Login, registrazione e dashboard account online. Supporto controlli touch con bottoni adattivi per mobile."
+    "title": "Web Account Polish + Mobile Controls Pass",
+    "body": "Web frontend (towerdefense-web): Nuovo src/lib/api.ts: helper login/register/getSavesMeta/getAuthMe/getProfileStats con timeout 8s e fallback null. Nuovo src/lib/auth.ts:."
   },
   {
     "date": "2026-05-11",
     "version": "v8.3",
-    "title": "Map Preview, Boss Rework e Combat Recap",
-    "body": "Preview mappa pre-run con seed manuale/casuale. Boss con fasi HP e abilità telegrafate. Recap combattimento post-wave."
+    "title": "Map Preview + Boss Rework + Combat Recap",
+    "body": "Nuovo modulo src/mapseed.py: stato seed pre-run, seed manuale deterministico, reroll limitati e lock per challenge. Flow pre-run esteso con MAPPREVIEW: preview mappa."
   },
   {
     "date": "2026-05-11",
     "version": "v8.2",
-    "title": "Codex, Meta Progression e Mutators",
-    "body": "Enciclopedia torri/nemici/elementi consultabile. Sistema XP e livelli persistenti. Mutator bonus/malus per variare le run."
+    "title": "Codex + Meta Progression + Run Mutators",
+    "body": "Nuovo modulo src/gamecodex.py: 37 entry immutabili per Towers, Enemies, Elements, Terrain, Events, Boss. Schermata Codex consultabile dal menu, senza dipendenze da."
   },
   {
     "date": "2026-05-11",
     "version": "v8.1",
-    "title": "Daily e Weekly Challenges",
-    "body": "Sfide giornaliere e settimanali con mappe e modificatori deterministici. Punteggi sfide in classifica separata."
+    "title": "Daily/Weekly Challenges + DPR Rendering Fix",
+    "body": "Nuovo dominio src/challenges.py: challenge giornaliere/settimanali deterministiche con id stabile, seed SHA-256 e modificatori supportati (richstart, fastfliers, bosspressure).."
+  },
+  {
+    "date": "2026-05-09",
+    "version": "v8.0",
+    "title": "In-Game Panel Polish + Game Over Redesign + Bug Fixes",
+    "body": "Bug fix: test di regressione per auto-repair mid-wave aggiunto (testautorepairtriggersmidwavewhengoldavailable); logica gi\u00e0 corretta. Bug fix: mobile touch su splash screen \u2014."
+  },
+  {
+    "date": "2026-05-07",
+    "version": "v7.9",
+    "title": "Perk Selection Screen Redesign",
+    "body": "category e rarity aggiunti al dataclass Perk in src/perks.py; tutti i PERKPOOL aggiornati. drawperkselectionscreen ridisegnato in src/renderer/menus.py: card 320\u00d7220 con header."
+  },
+  {
+    "date": "2026-05-07",
+    "version": "v7.8",
+    "title": "Menu Layout Overhaul",
+    "body": "Title screen: font 72px, titolo a y=150, bottoni 200\u00d744px a y=330. Difficulty screen: font 48px, titolo a y=150, bottoni 280\u00d760px con descrizioni sotto. Background:."
+  },
+  {
+    "date": "2026-05-07",
+    "version": "v7.7",
+    "title": "Web Font Clarity",
+    "body": "migliorata leggibilita web dei microtesti UI, con focus su descrizioni perk; font piccoli centralizzati e portati a dimensioni minime leggibili; template web canvas aggiornato."
+  },
+  {
+    "date": "2026-05-06",
+    "version": "v7.6",
+    "title": "Web Rendering Quality / HiDPI Fix",
+    "body": "Problema: testo/UI sfocato in-browser su display HiDPI/Retina (CSS bilinear upscaling). Tentativo TILE=96 (1728\u00d71452 fb) revertito \u2014 gioco troppo piccolo su schermi normali. Fix."
+  },
+  {
+    "date": "2026-05-06",
+    "version": "v7.5",
+    "title": "GUI Resolution + Tile Polish",
+    "body": "Grid: 16\u00d712 TILE=56 \u2192 18\u00d710 TILE=64. SCREENW 896\u21921152, SCREENH 1000\u2192968. Upscale factor ridotto: 1.43x \u2192 1.1x. Rimosso image-rendering:pixelated (poi reintrodotto in v7.6). Tile."
+  },
+  {
+    "date": "2026-05-06",
+    "version": "v7.4.1",
+    "title": "DB Cloud Persistence + Web Save/Load Fix",
+    "body": "Postgres esterno free (Neon) con DATABASEURL; fallback SQLite solo locale/dev. Migrazione Postgres completata; persistenza utenti e save/load confermata post-deploy/redeploy.."
   },
   {
     "date": "2026-05-05",
     "version": "v7.4",
-    "title": "Dominio live: towerdefense-cj.online",
-    "body": "Il gioco è online. Build web su Vercel, backend su Render. Registrati e salva i tuoi progressi nel cloud."
+    "title": "Web Deployment Public Surface",
+    "body": "Dominio registrato e collegato: towerdefense-cj.online. Nuova repo web separata towerdefense-web (Next.js) deployata su Vercel. Pagine pubbliche base online: home (/), news."
   }
 ]
