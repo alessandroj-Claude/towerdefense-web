@@ -144,3 +144,20 @@ export async function getAchievements(
   );
   return res || [];
 }
+
+export type DLCActivationResult = { ok: boolean };
+
+export async function activateDlc(
+  token: string,
+  dlcId: string,
+  licenseKey: string
+): Promise<DLCActivationResult | null> {
+  return fetchJson<DLCActivationResult>(`${BACKEND_URL}/dlc/activate`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ dlc_id: dlcId, license_key: licenseKey }),
+  });
+}

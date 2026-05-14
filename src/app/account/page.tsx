@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { login, register, getSavesMeta, getAuthMe, getProfileStats, getUserRuns, getAchievements, type LeaderboardEntry, type ProfileStatsData } from "@/lib/api";
+import { login, register, getSavesMeta, getAuthMe, getProfileStats, getUserRuns, getAchievements, activateDlc, type LeaderboardEntry, type ProfileStatsData } from "@/lib/api";
 import { getAuthState, setAuthState, clearAuthState, type AuthState } from "@/lib/auth";
 
 // Achievement catalog
@@ -40,6 +40,11 @@ const BADGE_LABELS: Record<string, string> = {
   mutator_trial: "Mutator",
 };
 
+const DLC_CATALOG = [
+  { id: "storm_pack", name: "Storm Pack", desc: "Sblocca la Storm Tower." },
+  { id: "inferno_pack", name: "Inferno Pack", desc: "Sblocca la Inferno Tower." },
+] as const;
+
 export default function AccountPage() {
   const [authState, setAuthStateLocal] = useState<AuthState | null>(null);
   const [loading, setLoading] = useState(true);
@@ -53,6 +58,10 @@ export default function AccountPage() {
   const [userRuns, setUserRuns] = useState<LeaderboardEntry[] | null>(null);
   const [achievements, setAchievements] = useState<string[] | null>(null);
   const [backendUnavailable, setBackendUnavailable] = useState(false);
+  const [selectedDlcId, setSelectedDlcId] = useState<string | null>(null);
+  const [dlcKeys, setDlcKeys] = useState<Record<string, string>>({});
+  const [dlcBusy, setDlcBusy] = useState<string | null>(null);
+  const [dlcMessage, setDlcMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
 
   const refreshData = async (auth: AuthState) => {
     setBackendUnavailable(false);
@@ -124,6 +133,44 @@ export default function AccountPage() {
     setUserRuns(null);
     setAchievements(null);
     setError("");
+    setSelectedDlcId(null);
+    setDlcKeys({});
+    setDlcBusy(null);
+    setDlcMessage(null);
+  }
+
+  async function handleActivateDlc(dlcId: string) {
+    if (!authState) return;
+    const licenseKey = (dlcKeys[dlcId] ?? "").trim();
+    if (!licenseKey) {
+      setDlcMessage({ kind: "error", text: "Inserisci una license key." });
+      return;
+    }
+
+    setDlcBusy(dlcId);
+    setDlcMessage(null);
+    const result = await activateDlc(authState.token, dlcId, licenseKey);
+
+    if (!result?.ok) {
+      setDlcBusy(null);
+      setDlcMessage({ kind: "error", text: "Key non valida o backend non raggiungibile." });
+      return;
+    }
+
+    const me = await getAuthMe(authState.token);
+    const nextDlcs = me?.dlcs ?? Array.from(new Set([...authState.dlcs, dlcId]));
+    const nextAuth: AuthState = { ...authState, dlcs: nextDlcs };
+
+    setAuthState(nextAuth);
+    setAuthStateLocal(nextAuth);
+    setMeData(me);
+    setDlcKeys((prev) => ({ ...prev, [dlcId]: "" }));
+    setSelectedDlcId(null);
+    setDlcBusy(null);
+    setDlcMessage({
+      kind: "ok",
+      text: "DLC attivato. Rientra nel gioco con questo account per usarlo.",
+    });
   }
 
   if (loading) {
@@ -211,9 +258,6 @@ export default function AccountPage() {
     );
   }
 
-  const dlcStormActive = authState.dlcs.includes("storm");
-  const dlcInfernoActive = authState.dlcs.includes("inferno");
-
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-16 sm:px-10">
       <h1 className="text-3xl font-semibold">Account</h1>
@@ -261,28 +305,80 @@ export default function AccountPage() {
         {/* DLC Status */}
         <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
           <p className="text-sm text-neutral-500">DLC</p>
-          <div className="mt-3 space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-neutral-700 dark:text-neutral-300">Storm Pack</span>
-              <span
-                className={`text-xs font-medium ${
-                  dlcStormActive ? "text-green-600" : "text-neutral-500"
-                }`}
-              >
-                {dlcStormActive ? "Active" : "Inactive"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-neutral-700 dark:text-neutral-300">Inferno Pack</span>
-              <span
-                className={`text-xs font-medium ${
-                  dlcInfernoActive ? "text-green-600" : "text-neutral-500"
-                }`}
-              >
-                {dlcInfernoActive ? "Active" : "Inactive"}
-              </span>
-            </div>
+          <div className="mt-3 space-y-3">
+            {DLC_CATALOG.map((dlc) => {
+              const active =
+                authState.dlcs.includes(dlc.id) ||
+                Boolean(meData?.dlcs.includes(dlc.id));
+              const expanded = selectedDlcId === dlc.id && !active;
+
+              return (
+                <div
+                  key={dlc.id}
+                  className="rounded-xl border border-neutral-200 p-3 dark:border-neutral-800"
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDlcMessage(null);
+                      setSelectedDlcId(expanded ? null : dlc.id);
+                    }}
+                    className="flex w-full items-center justify-between text-left"
+                  >
+                    <span>
+                      <span className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                        {dlc.name}
+                      </span>
+                      <span className="block text-xs text-neutral-500">
+                        {dlc.desc}
+                      </span>
+                    </span>
+                    <span
+                      className={`text-xs font-medium ${
+                        active ? "text-green-600" : "text-neutral-500"
+                      }`}
+                    >
+                      {active ? "Active" : "Activate"}
+                    </span>
+                  </button>
+
+                  {expanded && (
+                    <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+                      <input
+                        type="text"
+                        value={dlcKeys[dlc.id] ?? ""}
+                        onChange={(e) =>
+                          setDlcKeys((prev) => ({
+                            ...prev,
+                            [dlc.id]: e.target.value,
+                          }))
+                        }
+                        className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder-neutral-500 outline-none transition hover:border-neutral-400 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder-neutral-500 dark:hover:border-neutral-600 dark:focus:border-neutral-100 dark:focus:ring-neutral-100"
+                        placeholder="License key"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleActivateDlc(dlc.id)}
+                        disabled={dlcBusy === dlc.id}
+                        className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+                      >
+                        {dlcBusy === dlc.id ? "Activating..." : "Activate"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
+          {dlcMessage && (
+            <p
+              className={`mt-3 text-xs ${
+                dlcMessage.kind === "ok" ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {dlcMessage.text}
+            </p>
+          )}
         </div>
 
         {/* Stats */}
