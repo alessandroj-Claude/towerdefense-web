@@ -1,5 +1,11 @@
 [
   {
+    "date": "2026-05-14",
+    "version": "v10.1",
+    "title": "Web Account, News, Health Check, Theme Fix",
+    "body": "towerdefense-web/src/app/account/page.tsx: blocco DLC reso cliccabile con input license key e attivazione via POST /dlc/activate; refresh GET /auth/me e update."
+  },
+  {
     "date": "2026-05-13",
     "version": "v10.0",
     "title": "Architecture Maintenance Pass",
@@ -112,11 +118,5 @@
     "version": "v7.4.1",
     "title": "DB Cloud Persistence + Web Save/Load Fix",
     "body": "Postgres esterno free (Neon) con DATABASEURL; fallback SQLite solo locale/dev. Migrazione Postgres completata; persistenza utenti e save/load confermata post-deploy/redeploy.."
-  },
-  {
-    "date": "2026-05-05",
-    "version": "v7.4",
-    "title": "Web Deployment Public Surface",
-    "body": "Dominio registrato e collegato: towerdefense-cj.online. Nuova repo web separata towerdefense-web (Next.js) deployata su Vercel. Pagine pubbliche base online: home (/), news."
   }
 ]
