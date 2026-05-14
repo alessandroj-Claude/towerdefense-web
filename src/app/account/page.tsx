@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { login, register, getSavesMeta, getAuthMe, getProfileStats, getUserRuns, getAchievements, activateDlc, type LeaderboardEntry, type ProfileStatsData } from "@/lib/api";
-import { getAuthState, setAuthState, clearAuthState, type AuthState } from "@/lib/auth";
+import {
+  getAuthState,
+  setAuthState,
+  clearAuthState,
+  getGameAutoLoginEnabled,
+  setGameAutoLoginEnabled,
+  type AuthState,
+} from "@/lib/auth";
 
 // Achievement catalog
 const ACHIEVEMENT_CATALOG = [
@@ -62,6 +69,7 @@ export default function AccountPage() {
   const [dlcKeys, setDlcKeys] = useState<Record<string, string>>({});
   const [dlcBusy, setDlcBusy] = useState<string | null>(null);
   const [dlcMessage, setDlcMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
+  const [gameAutoLogin, setGameAutoLogin] = useState(true);
 
   const refreshData = async (auth: AuthState) => {
     setBackendUnavailable(false);
@@ -87,6 +95,7 @@ export default function AccountPage() {
   useEffect(() => {
     const initAuth = async () => {
       const auth = getAuthState();
+      setGameAutoLogin(getGameAutoLoginEnabled());
       setAuthStateLocal(auth);
 
       if (auth) {
@@ -137,6 +146,11 @@ export default function AccountPage() {
     setDlcKeys({});
     setDlcBusy(null);
     setDlcMessage(null);
+  }
+
+  function handleGameAutoLoginChange(enabled: boolean) {
+    setGameAutoLogin(enabled);
+    setGameAutoLoginEnabled(enabled);
   }
 
   async function handleActivateDlc(dlcId: string) {
@@ -277,6 +291,26 @@ export default function AccountPage() {
           <p className="mt-1 text-xs text-neutral-500">
             ID: {authState.userId}
           </p>
+        </div>
+
+        {/* Game Auto Login */}
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              checked={gameAutoLogin}
+              onChange={(e) => handleGameAutoLoginChange(e.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-neutral-300 text-neutral-900"
+            />
+            <span>
+              <span className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                Auto-login nel gioco
+              </span>
+              <span className="mt-1 block text-sm text-neutral-600 dark:text-neutral-400">
+                Apri direttamente il gioco con questo account quando entri in Play.
+              </span>
+            </span>
+          </label>
         </div>
 
         {/* Cloud Save Status */}
