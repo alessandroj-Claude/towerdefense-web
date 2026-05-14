@@ -1,6 +1,12 @@
 [
   {
     "date": "2026-05-14",
+    "version": "v10.2.1",
+    "title": "Codex Click Bugfix",
+    "body": "src/renderer/menus.py: aggiunto codexlayoutrects(...) e drawcodexscreen(...) ora restituisce hitbox per categorie e entry visibili. src/game.py: il menu CODEX conserva."
+  },
+  {
+    "date": "2026-05-14",
     "version": "v10.2",
     "title": "Web Game Auto Login",
     "body": "towerdefense-web/src/app/account/page.tsx: aggiunto checkbox Auto-login nel gioco, visibile da account loggato e abilitato di default. towerdefense-web/src/lib/auth.ts: nuova."
@@ -112,11 +118,5 @@
     "version": "v7.7",
     "title": "Web Font Clarity",
     "body": "migliorata leggibilita web dei microtesti UI, con focus su descrizioni perk; font piccoli centralizzati e portati a dimensioni minime leggibili; template web canvas aggiornato."
-  },
-  {
-    "date": "2026-05-06",
-    "version": "v7.6",
-    "title": "Web Rendering Quality / HiDPI Fix",
-    "body": "Problema: testo/UI sfocato in-browser su display HiDPI/Retina (CSS bilinear upscaling). Tentativo TILE=96 (1728\u00d71452 fb) revertito \u2014 gioco troppo piccolo su schermi normali. Fix."
   }
 ]
