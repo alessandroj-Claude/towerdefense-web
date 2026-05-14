@@ -1,4 +1,5 @@
 import WakeupPing from "./components/WakeupPing";
+import HealthCheckButton from "./components/HealthCheckButton";
 
 export default function Home() {
   return (
@@ -28,6 +29,7 @@ export default function Home() {
             >
               News
             </a>
+            <HealthCheckButton />
           </div>
         </section>
 
