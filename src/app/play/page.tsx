@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { getAuthState, type AuthState } from "@/lib/auth";
+import { LanguageToggle } from "@/app/components/LanguageToggle";
 
 export default function PlayPage() {
   const [hasError, setHasError] = useState(false);
@@ -50,6 +51,9 @@ export default function PlayPage() {
             >
               ← Home
             </Link>
+            <div className="pointer-events-auto rounded-full bg-black/60 backdrop-blur-sm">
+              <LanguageToggle compact />
+            </div>
           </div>
         </>
       )}

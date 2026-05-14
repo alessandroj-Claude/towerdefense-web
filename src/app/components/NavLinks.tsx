@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getAuthState } from "@/lib/auth";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageToggle } from "./LanguageToggle";
 
 const BASE_LINKS = [
   { href: "/", label: "Home" },
@@ -48,6 +49,7 @@ export default function NavLinks() {
         );
       })}
       <ThemeToggle />
+      <LanguageToggle />
     </div>
   );
 }
