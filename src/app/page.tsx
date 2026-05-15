@@ -1,6 +1,7 @@
 "use client";
 import WakeupPing from "./components/WakeupPing";
 import HealthCheckButton from "./components/HealthCheckButton";
+import { PlayButton } from "./components/PlayButton";
 import { useLocale } from "@/hooks/useLocale";
 import { STRINGS } from "@/lib/web-strings";
 
@@ -23,12 +24,7 @@ export default function Home() {
             {s.hero_desc}
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <a
-              className="inline-flex h-11 items-center justify-center rounded-full bg-neutral-900 px-6 text-sm font-medium text-white transition hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900"
-              href="/play"
-            >
-              {s.play}
-            </a>{" "}
+            <PlayButton label={s.play} />{" "}
             <a
               className="inline-flex h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-6 text-sm font-medium text-neutral-800 transition hover:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
               href="/news"
