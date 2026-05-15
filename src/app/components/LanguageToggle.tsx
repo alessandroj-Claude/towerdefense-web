@@ -13,13 +13,12 @@ interface Props {
 }
 
 export function LanguageToggle({ compact = false }: Props) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+  const [locale, setLocaleState] = useState<Locale>(() => {
+    if (typeof window !== "undefined") return getLocale();
+    return "en";
+  });
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setLocaleState(getLocale());
-  }, []);
 
   useEffect(() => {
     if (!open) return;

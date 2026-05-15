@@ -2,8 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { getLeaderboard, type LeaderboardEntry } from "@/lib/api";
+import { useLocale } from "@/hooks/useLocale";
+import { STRINGS } from "@/lib/web-strings";
 
 export default function LeaderboardPage() {
+  const locale = useLocale();
+  const s = STRINGS[locale].leaderboard;
+
   const [entries, setEntries] = useState<LeaderboardEntry[] | null>(null);
   const [difficulty, setDifficulty] = useState("normal");
 
@@ -23,7 +28,7 @@ export default function LeaderboardPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-10">
-      <h1 className="mb-8 text-3xl font-bold">Classifica Globale</h1>
+      <h1 className="mb-8 text-3xl font-bold">{s.title}</h1>
 
       <div className="mb-6 flex gap-2">
         <button
@@ -34,7 +39,7 @@ export default function LeaderboardPage() {
               : "bg-neutral-200 text-neutral-700 hover:bg-neutral-300 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600"
           }`}
         >
-          Normale
+          {s.normal}
         </button>
         <button
           onClick={() => setDifficulty("hard")}
@@ -44,18 +49,18 @@ export default function LeaderboardPage() {
               : "bg-neutral-200 text-neutral-700 hover:bg-neutral-300 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600"
           }`}
         >
-          Difficile
+          {s.hard}
         </button>
       </div>
 
-      {loading && <p className="text-neutral-600 dark:text-neutral-400">Caricamento...</p>}
+      {loading && <p className="text-neutral-600 dark:text-neutral-400">{s.loading}</p>}
 
       {!loading && !entries && (
-        <p className="text-neutral-600 dark:text-neutral-400">Classifica non disponibile al momento</p>
+        <p className="text-neutral-600 dark:text-neutral-400">{s.unavailable}</p>
       )}
 
       {!loading && entries && entries.length === 0 && (
-        <p className="text-neutral-600 dark:text-neutral-400">Nessuna partita registrata</p>
+        <p className="text-neutral-600 dark:text-neutral-400">{s.empty}</p>
       )}
 
       {!loading && entries && entries.length > 0 && (
@@ -64,16 +69,16 @@ export default function LeaderboardPage() {
             <thead>
               <tr className="border-b border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950">
                 <th className="px-4 py-3 text-left font-semibold text-neutral-700 dark:text-neutral-300">
-                  #
+                  {s.col_rank}
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-neutral-700 dark:text-neutral-300">
-                  Giocatore
+                  {s.col_username}
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-neutral-700 dark:text-neutral-300">
-                  Punti
+                  {s.col_score}
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-neutral-700 dark:text-neutral-300">
-                  Onda
+                  {s.col_wave}
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-neutral-700 dark:text-neutral-300">
                   Data
