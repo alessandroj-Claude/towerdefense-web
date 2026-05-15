@@ -12,11 +12,16 @@ export default function NewsPage() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    const ac = new AbortController();
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://towerdefense-cj.online";
-    fetch(`${baseUrl}/news.json`)
+    fetch(`${baseUrl}/news.json`, { signal: ac.signal })
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((data: unknown) => setNews(Array.isArray(data) ? (data as NewsEntry[]) : null))
-      .catch(() => setError(true));
+      .catch((e: unknown) => {
+        if (e instanceof Error && e.name === "AbortError") return;
+        setError(true);
+      });
+    return () => ac.abort();
   }, []);
 
   return (

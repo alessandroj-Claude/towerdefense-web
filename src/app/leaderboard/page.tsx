@@ -97,7 +97,7 @@ export default function LeaderboardPage() {
                   <td className="px-4 py-3 text-neutral-900 dark:text-neutral-100">{entry.wave}</td>
                   <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">
                     {entry.created_at
-                      ? new Date(entry.created_at).toLocaleDateString("it-IT")
+                      ? new Date(entry.created_at).toLocaleDateString(locale === "it" ? "it-IT" : "en-US")
                       : "—"}
                   </td>
                 </tr>
