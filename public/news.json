@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-05-15",
+    "version": "v10.4",
+    "title": "Aggiornamento",
+    "body": "i18n game completion: GAME OVER screen, shop notices, tutorial labels, wave announce, user label, analytics overlay Fix web \"Esci\" button: navigateHome() undefined \u2192."
+  },
+  {
+    "date": "2026-05-14",
+    "version": "v10.3",
+    "title": "Localizzazione EN/IT",
+    "body": "src/i18n.py: singleton localizzazione init()/t()/setlocale()/currentlocale(), dot-notation JSON lookup con EN fallback. locales/en.json + locales/it.json: 211 chiavi tradotte."
+  },
+  {
     "date": "2026-05-14",
     "version": "v10.2.1",
     "title": "Codex Click Bugfix",
@@ -106,17 +118,5 @@
     "version": "v7.9",
     "title": "Perk Selection Screen Redesign",
     "body": "category e rarity aggiunti al dataclass Perk in src/perks.py; tutti i PERKPOOL aggiornati. drawperkselectionscreen ridisegnato in src/renderer/menus.py: card 320\u00d7220 con header."
-  },
-  {
-    "date": "2026-05-07",
-    "version": "v7.8",
-    "title": "Menu Layout Overhaul",
-    "body": "Title screen: font 72px, titolo a y=150, bottoni 200\u00d744px a y=330. Difficulty screen: font 48px, titolo a y=150, bottoni 280\u00d760px con descrizioni sotto. Background:."
-  },
-  {
-    "date": "2026-05-07",
-    "version": "v7.7",
-    "title": "Web Font Clarity",
-    "body": "migliorata leggibilita web dei microtesti UI, con focus su descrizioni perk; font piccoli centralizzati e portati a dimensioni minime leggibili; template web canvas aggiornato."
   }
 ]
