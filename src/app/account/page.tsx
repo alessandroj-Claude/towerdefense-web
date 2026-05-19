@@ -1,7 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { login, register, getSavesMeta, getAuthMe, getProfileStats, getUserRuns, getAchievements, activateDlc, type LeaderboardEntry, type ProfileStatsData } from "@/lib/api";
+import {
+  login,
+  register,
+  getSavesMeta,
+  getAuthMe,
+  getProfileStats,
+  getUserRuns,
+  getAchievements,
+  activateKey,
+  shopPurchase,
+  getCreditsBalance,
+  type LeaderboardEntry,
+  type ProfileStatsData,
+  type KeyActivateResult,
+} from "@/lib/api";
 import {
   getAuthState,
   setAuthState,
@@ -11,7 +25,6 @@ import {
   type AuthState,
 } from "@/lib/auth";
 
-// Achievement catalog
 const ACHIEVEMENT_CATALOG = [
   { id: "first_blood", name: "First Blood", icon: "⚔️", hidden: false, description: "Completa la tua prima wave" },
   { id: "survivor_10", name: "Survivor", icon: "🛡️", hidden: false, description: "Raggiungi wave 10" },
@@ -47,9 +60,9 @@ const BADGE_LABELS: Record<string, string> = {
   mutator_trial: "Mutator",
 };
 
-const DLC_CATALOG = [
-  { id: "storm_pack", name: "Storm Pack", desc: "Sblocca la Storm Tower." },
-  { id: "inferno_pack", name: "Inferno Pack", desc: "Sblocca la Inferno Tower." },
+const SHOP_CATALOG = [
+  { id: "storm_pack", name: "Storm Pack", desc: "Sblocca la Storm Tower.", price: 50 },
+  { id: "inferno_pack", name: "Inferno Pack", desc: "Sblocca la Inferno Tower.", price: 50 },
 ] as const;
 
 export default function AccountPage() {
@@ -65,20 +78,22 @@ export default function AccountPage() {
   const [userRuns, setUserRuns] = useState<LeaderboardEntry[] | null>(null);
   const [achievements, setAchievements] = useState<string[] | null>(null);
   const [backendUnavailable, setBackendUnavailable] = useState(false);
-  const [selectedDlcId, setSelectedDlcId] = useState<string | null>(null);
-  const [dlcKeys, setDlcKeys] = useState<Record<string, string>>({});
-  const [dlcBusy, setDlcBusy] = useState<string | null>(null);
-  const [dlcMessage, setDlcMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
+  const [credits, setCredits] = useState<number | null>(null);
+  const [shopBusy, setShopBusy] = useState<string | null>(null);
+  const [shopKey, setShopKey] = useState("");
+  const [shopKeyBusy, setShopKeyBusy] = useState(false);
+  const [shopMessage, setShopMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
   const [gameAutoLogin, setGameAutoLogin] = useState(true);
 
   const refreshData = async (auth: AuthState) => {
     setBackendUnavailable(false);
-    const [meta, me, stats, runs, achs] = await Promise.all([
+    const [meta, me, stats, runs, achs, bal] = await Promise.all([
       getSavesMeta(auth.userId, auth.token),
       getAuthMe(auth.token),
       getProfileStats(auth.token),
       getUserRuns(auth.userId, auth.token, 10),
       getAchievements(auth.userId, auth.token),
+      getCreditsBalance(auth.token),
     ]);
 
     if (meta === null && me === null) {
@@ -89,6 +104,7 @@ export default function AccountPage() {
       setStatsData(stats);
       setUserRuns(runs);
       setAchievements(achs);
+      if (bal !== null) setCredits(bal.credits);
     }
   };
 
@@ -141,11 +157,12 @@ export default function AccountPage() {
     setStatsData(null);
     setUserRuns(null);
     setAchievements(null);
+    setCredits(null);
+    setShopBusy(null);
+    setShopKey("");
+    setShopKeyBusy(false);
+    setShopMessage(null);
     setError("");
-    setSelectedDlcId(null);
-    setDlcKeys({});
-    setDlcBusy(null);
-    setDlcMessage(null);
   }
 
   function handleGameAutoLoginChange(enabled: boolean) {
@@ -153,38 +170,82 @@ export default function AccountPage() {
     setGameAutoLoginEnabled(enabled);
   }
 
-  async function handleActivateDlc(dlcId: string) {
+  async function handlePurchase(dlcId: string) {
     if (!authState) return;
-    const licenseKey = (dlcKeys[dlcId] ?? "").trim();
-    if (!licenseKey) {
-      setDlcMessage({ kind: "error", text: "Inserisci una license key." });
+    setShopBusy(dlcId);
+    setShopMessage(null);
+
+    const { data, status } = await shopPurchase(authState.token, dlcId);
+    setShopBusy(null);
+
+    if (status === 402) {
+      setShopMessage({ kind: "error", text: "Crediti insufficienti." });
+      return;
+    }
+    if (status === 409) {
+      setShopMessage({ kind: "error", text: "DLC già attivato." });
+      return;
+    }
+    if (!data?.ok) {
+      setShopMessage({ kind: "error", text: "Acquisto fallito. Riprova." });
       return;
     }
 
-    setDlcBusy(dlcId);
-    setDlcMessage(null);
-    const result = await activateDlc(authState.token, dlcId, licenseKey);
-
-    if (!result?.ok) {
-      setDlcBusy(null);
-      setDlcMessage({ kind: "error", text: "Key non valida o backend non raggiungibile." });
-      return;
-    }
-
+    const item = SHOP_CATALOG.find((c) => c.id === dlcId);
     const me = await getAuthMe(authState.token);
     const nextDlcs = me?.dlcs ?? Array.from(new Set([...authState.dlcs, dlcId]));
     const nextAuth: AuthState = { ...authState, dlcs: nextDlcs };
-
     setAuthState(nextAuth);
     setAuthStateLocal(nextAuth);
     setMeData(me);
-    setDlcKeys((prev) => ({ ...prev, [dlcId]: "" }));
-    setSelectedDlcId(null);
-    setDlcBusy(null);
-    setDlcMessage({
+    setCredits(data.credits);
+    setShopMessage({
       kind: "ok",
-      text: "DLC attivato. Rientra nel gioco con questo account per usarlo.",
+      text: `${item?.name ?? dlcId} sbloccato! Rientra nel gioco per usarlo.`,
     });
+  }
+
+  async function handleActivateKey() {
+    if (!authState) return;
+    const key = shopKey.trim();
+    if (!key) {
+      setShopMessage({ kind: "error", text: "Inserisci una chiave." });
+      return;
+    }
+
+    setShopKeyBusy(true);
+    setShopMessage(null);
+    const result: KeyActivateResult | null = await activateKey(authState.token, key);
+    setShopKeyBusy(false);
+
+    if (!result?.ok) {
+      setShopMessage({ kind: "error", text: "Chiave non valida." });
+      return;
+    }
+
+    setShopKey("");
+
+    if (result.type === "credits") {
+      const bal = await getCreditsBalance(authState.token);
+      if (bal !== null) setCredits(bal.credits);
+      const match = result.effect.match(/credits\+(\d+)/);
+      const amount = match ? match[1] : "?";
+      setShopMessage({ kind: "ok", text: `✦${amount} crediti aggiunti al tuo account!` });
+      return;
+    }
+
+    if (result.type === "dlc") {
+      const me = await getAuthMe(authState.token);
+      const nextDlcs = me?.dlcs ?? authState.dlcs;
+      const nextAuth: AuthState = { ...authState, dlcs: nextDlcs };
+      setAuthState(nextAuth);
+      setAuthStateLocal(nextAuth);
+      setMeData(me);
+      setShopMessage({ kind: "ok", text: "DLC sbloccato! Rientra nel gioco per usarlo." });
+      return;
+    }
+
+    setShopMessage({ kind: "ok", text: "Chiave attivata." });
   }
 
   if (loading) {
@@ -336,85 +397,6 @@ export default function AccountPage() {
           )}
         </div>
 
-        {/* DLC Status */}
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
-          <p className="text-sm text-neutral-500">DLC</p>
-          <div className="mt-3 space-y-3">
-            {DLC_CATALOG.map((dlc) => {
-              const active =
-                authState.dlcs.includes(dlc.id) ||
-                Boolean(meData?.dlcs.includes(dlc.id));
-              const expanded = selectedDlcId === dlc.id && !active;
-
-              return (
-                <div
-                  key={dlc.id}
-                  className="rounded-xl border border-neutral-200 p-3 dark:border-neutral-800"
-                >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setDlcMessage(null);
-                      setSelectedDlcId(expanded ? null : dlc.id);
-                    }}
-                    className="flex w-full items-center justify-between text-left"
-                  >
-                    <span>
-                      <span className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                        {dlc.name}
-                      </span>
-                      <span className="block text-xs text-neutral-500">
-                        {dlc.desc}
-                      </span>
-                    </span>
-                    <span
-                      className={`text-xs font-medium ${
-                        active ? "text-green-600" : "text-neutral-500"
-                      }`}
-                    >
-                      {active ? "Active" : "Activate"}
-                    </span>
-                  </button>
-
-                  {expanded && (
-                    <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-                      <input
-                        type="text"
-                        value={dlcKeys[dlc.id] ?? ""}
-                        onChange={(e) =>
-                          setDlcKeys((prev) => ({
-                            ...prev,
-                            [dlc.id]: e.target.value,
-                          }))
-                        }
-                        className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder-neutral-500 outline-none transition hover:border-neutral-400 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder-neutral-500 dark:hover:border-neutral-600 dark:focus:border-neutral-100 dark:focus:ring-neutral-100"
-                        placeholder="License key"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleActivateDlc(dlc.id)}
-                        disabled={dlcBusy === dlc.id}
-                        className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
-                      >
-                        {dlcBusy === dlc.id ? "Activating..." : "Activate"}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          {dlcMessage && (
-            <p
-              className={`mt-3 text-xs ${
-                dlcMessage.kind === "ok" ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              {dlcMessage.text}
-            </p>
-          )}
-        </div>
-
         {/* Stats */}
         <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
           <p className="text-sm text-neutral-500">Profile Stats</p>
@@ -422,14 +404,11 @@ export default function AccountPage() {
             <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Backend non raggiungibile</p>
           ) : statsData ? (
             <div className="mt-3 space-y-3">
-              {/* Level + XP row */}
               <div className="flex items-baseline justify-between">
                 <span className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">Lv. {statsData.level}</span>
                 <span className="text-sm text-neutral-500">{statsData.total_xp.toLocaleString()} XP</span>
               </div>
-              {/* Divider */}
               <div className="border-t border-neutral-100 dark:border-neutral-800" />
-              {/* Stats grid */}
               <div className="grid grid-cols-2 gap-y-1 text-sm">
                 <span className="text-neutral-500">Partite</span>
                 <span className="font-medium text-neutral-900 text-right dark:text-neutral-100">{statsData.runs_played}</span>
@@ -438,7 +417,6 @@ export default function AccountPage() {
                 <span className="text-neutral-500">Best wave</span>
                 <span className="font-medium text-neutral-900 text-right dark:text-neutral-100">{statsData.best_wave}</span>
               </div>
-              {/* Badges */}
               {statsData.badges.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-1">
                   {statsData.badges.map((badge) => (
@@ -456,6 +434,83 @@ export default function AccountPage() {
             <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Caricamento...</p>
           )}
         </div>
+      </div>
+
+      {/* Shop */}
+      <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="mb-4 flex items-center justify-between">
+          <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Shop</p>
+          {credits !== null && (
+            <span className="rounded-full bg-neutral-100 px-3 py-1 text-sm font-semibold text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
+              ✦ {credits}
+            </span>
+          )}
+        </div>
+
+        {/* DLC catalog */}
+        <div className="space-y-2">
+          {SHOP_CATALOG.map((item) => {
+            const owned =
+              authState.dlcs.includes(item.id) ||
+              Boolean(meData?.dlcs.includes(item.id));
+            return (
+              <div
+                key={item.id}
+                className="flex items-center justify-between rounded-xl border border-neutral-200 p-3 dark:border-neutral-800"
+              >
+                <div>
+                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{item.name}</p>
+                  <p className="text-xs text-neutral-500">{item.desc}</p>
+                </div>
+                {owned ? (
+                  <span className="shrink-0 text-xs font-medium text-green-600">Attivo</span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handlePurchase(item.id)}
+                    disabled={shopBusy === item.id}
+                    className="shrink-0 rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+                  >
+                    {shopBusy === item.id ? "…" : `✦ ${item.price}`}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Key activation */}
+        <div className="mt-5 border-t border-neutral-100 pt-5 dark:border-neutral-800">
+          <p className="mb-2 text-xs text-neutral-500">Hai una chiave di attivazione?</p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={shopKey}
+              onChange={(e) => setShopKey(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") handleActivateKey(); }}
+              placeholder="Chiave di attivazione"
+              className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder-neutral-500 outline-none transition hover:border-neutral-400 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder-neutral-500 dark:hover:border-neutral-600 dark:focus:border-neutral-100 dark:focus:ring-neutral-100"
+            />
+            <button
+              type="button"
+              onClick={handleActivateKey}
+              disabled={shopKeyBusy}
+              className="shrink-0 rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+            >
+              {shopKeyBusy ? "…" : "Attiva"}
+            </button>
+          </div>
+        </div>
+
+        {shopMessage && (
+          <p
+            className={`mt-3 text-xs ${
+              shopMessage.kind === "ok" ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {shopMessage.text}
+          </p>
+        )}
       </div>
 
       {/* Run History */}
@@ -512,7 +567,6 @@ export default function AccountPage() {
                   }`}
                   title={unlocked ? ach.description : ""}
                 >
-                  {/* Achievement Badge */}
                   <div
                     className={`flex items-center justify-center rounded-md w-12 h-12 text-2xl transition ${
                       unlocked ? "bg-white shadow-sm dark:bg-neutral-800" : "bg-neutral-200 text-neutral-400 dark:bg-neutral-700"
@@ -520,8 +574,6 @@ export default function AccountPage() {
                   >
                     {unlocked ? ach.icon : "?"}
                   </div>
-
-                  {/* Name */}
                   <p
                     className={`mt-2 text-xs font-medium text-center transition line-clamp-2 ${
                       unlocked ? "text-neutral-900 dark:text-neutral-100" : "text-neutral-500"
@@ -529,8 +581,6 @@ export default function AccountPage() {
                   >
                     {ach.name}
                   </p>
-
-                  {/* Tooltip on hover */}
                   {unlocked && (
                     <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 hidden group-hover:block bg-neutral-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10 pointer-events-none">
                       {ach.description}

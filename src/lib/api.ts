@@ -145,19 +145,65 @@ export async function getAchievements(
   return res || [];
 }
 
-export type DLCActivationResult = { ok: boolean };
+async function fetchJsonWithStatus<T>(
+  url: string,
+  options: RequestInit & { timeout?: number } = {}
+): Promise<{ data: T | null; status: number | null }> {
+  const { timeout = 8000, ...fetchOpts } = options;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  try {
+    const res = await fetch(url, { ...fetchOpts, signal: controller.signal });
+    clearTimeout(id);
+    if (!res.ok) return { data: null, status: res.status };
+    return { data: (await res.json()) as T, status: res.status };
+  } catch {
+    return { data: null, status: null };
+  }
+}
 
-export async function activateDlc(
+export async function getCreditsBalance(
+  token: string
+): Promise<{ credits: number } | null> {
+  return fetchJson<{ credits: number }>(`${BACKEND_URL}/credits/balance`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export async function shopPurchase(
   token: string,
-  dlcId: string,
-  licenseKey: string
-): Promise<DLCActivationResult | null> {
-  return fetchJson<DLCActivationResult>(`${BACKEND_URL}/dlc/activate`, {
+  dlcId: string
+): Promise<{ data: { ok: boolean; credits: number } | null; status: number | null }> {
+  return fetchJsonWithStatus<{ ok: boolean; credits: number }>(
+    `${BACKEND_URL}/shop/purchase`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ dlc_id: dlcId }),
+    }
+  );
+}
+
+export type KeyActivateResult = {
+  ok: boolean;
+  type: string;
+  effect: string;
+  credits: number;
+};
+
+export async function activateKey(
+  token: string,
+  key: string
+): Promise<KeyActivateResult | null> {
+  return fetchJson<KeyActivateResult>(`${BACKEND_URL}/key/activate`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ dlc_id: dlcId, license_key: licenseKey }),
+    body: JSON.stringify({ key }),
   });
 }
