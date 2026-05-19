@@ -1,5 +1,5 @@
 const HEALTH_URL = "https://tower-defense-cj.onrender.com/health";
-const ATTEMPT_TIMEOUT_MS = 8000;
+const ATTEMPT_TIMEOUT_MS = 60000;
 
 export async function fetchHealthOnce(): Promise<boolean> {
   const controller = new AbortController();
