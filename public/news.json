@@ -1,5 +1,35 @@
 [
   {
+    "date": "2026-05-20",
+    "version": "v10.9",
+    "title": "Aggiornamento",
+    "body": "Tower XP system: each kill grants XP (1 per basic enemy, up to 10 for BossEnemy); 10 tiers with exponential thresholds [10, 25, 60, 120, 250, 500, 1000, 2000, 4000, 8000].."
+  },
+  {
+    "date": "2026-05-20",
+    "version": "v10.8",
+    "title": "Aggiornamento",
+    "body": "ScoutFlyer: new flying enemy type with Bezier arc trajectory and random lateral spawn position. FlyingEnemy refactored into PathFlyer (existing straight-line) + ScoutFlyer."
+  },
+  {
+    "date": "2026-05-19",
+    "version": "v10.7",
+    "title": "Aggiornamento",
+    "body": "Key system overhaul: user-specific, self-describing, single-use keys replace global shared keys. Key format: {BASE64URL({\"u\",\"t\",\"p\",\"n\"})}.{hmac[:16]} \u2014 types \"dlc\" and."
+  },
+  {
+    "date": "2026-05-18",
+    "version": "v10.6",
+    "title": "Aggiornamento",
+    "body": "Shop state replaces DLCMENU and KEYINPUT: unified SHOP screen where users buy DLC with credits or activate keys inline. src/db.py: purchasedlc() atomic \u2014 check balance, check."
+  },
+  {
+    "date": "2026-05-18",
+    "version": "v10.5",
+    "title": "Aggiornamento",
+    "body": "Credits currency system: credits INTEGER DEFAULT 100 per utente in DB (SQLite + PostgreSQL). src/db.py: getcredits(), adjustcredits() (clamp \u2265 0), migratecredits() safe."
+  },
+  {
     "date": "2026-05-15",
     "version": "v10.4",
     "title": "Aggiornamento",
@@ -88,35 +118,5 @@
     "version": "v8.4",
     "title": "Web Account Polish + Mobile Controls Pass",
     "body": "Web frontend (towerdefense-web): Nuovo src/lib/api.ts: helper login/register/getSavesMeta/getAuthMe/getProfileStats con timeout 8s e fallback null. Nuovo src/lib/auth.ts:."
-  },
-  {
-    "date": "2026-05-11",
-    "version": "v8.3",
-    "title": "Map Preview + Boss Rework + Combat Recap",
-    "body": "Nuovo modulo src/mapseed.py: stato seed pre-run, seed manuale deterministico, reroll limitati e lock per challenge. Flow pre-run esteso con MAPPREVIEW: preview mappa."
-  },
-  {
-    "date": "2026-05-11",
-    "version": "v8.2",
-    "title": "Codex + Meta Progression + Run Mutators",
-    "body": "Nuovo modulo src/gamecodex.py: 37 entry immutabili per Towers, Enemies, Elements, Terrain, Events, Boss. Schermata Codex consultabile dal menu, senza dipendenze da."
-  },
-  {
-    "date": "2026-05-11",
-    "version": "v8.1",
-    "title": "Daily/Weekly Challenges + DPR Rendering Fix",
-    "body": "Nuovo dominio src/challenges.py: challenge giornaliere/settimanali deterministiche con id stabile, seed SHA-256 e modificatori supportati (richstart, fastfliers, bosspressure).."
-  },
-  {
-    "date": "2026-05-09",
-    "version": "v8.0",
-    "title": "In-Game Panel Polish + Game Over Redesign + Bug Fixes",
-    "body": "Bug fix: test di regressione per auto-repair mid-wave aggiunto (testautorepairtriggersmidwavewhengoldavailable); logica gi\u00e0 corretta. Bug fix: mobile touch su splash screen \u2014."
-  },
-  {
-    "date": "2026-05-07",
-    "version": "v7.9",
-    "title": "Perk Selection Screen Redesign",
-    "body": "category e rarity aggiunti al dataclass Perk in src/perks.py; tutti i PERKPOOL aggiornati. drawperkselectionscreen ridisegnato in src/renderer/menus.py: card 320\u00d7220 con header."
   }
 ]
