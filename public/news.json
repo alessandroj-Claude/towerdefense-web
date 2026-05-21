@@ -1,5 +1,11 @@
 [
   {
+    "date": "2026-05-21",
+    "version": "v10.10",
+    "title": "Aggiornamento",
+    "body": "Mid-run events: every 5 waves a modal appears with 3 event choices + Skip; game slows to 0.1\u00d7 during selection. 15 events total: 8 positive (Gold Rain, Emergency Repair, Free."
+  },
+  {
     "date": "2026-05-20",
     "version": "v10.9",
     "title": "Aggiornamento",
@@ -112,11 +118,5 @@
     "version": "v8.5",
     "title": "Web Leaderboard + Run History",
     "body": "Backend: src/leaderboard.py: top5global e top5user ora accettano limit: int = 20 (era hardcoded 5). backend/leaderboard.py: endpoint GET /leaderboard/global reso pubblico."
-  },
-  {
-    "date": "2026-05-11",
-    "version": "v8.4",
-    "title": "Web Account Polish + Mobile Controls Pass",
-    "body": "Web frontend (towerdefense-web): Nuovo src/lib/api.ts: helper login/register/getSavesMeta/getAuthMe/getProfileStats con timeout 8s e fallback null. Nuovo src/lib/auth.ts:."
   }
 ]
