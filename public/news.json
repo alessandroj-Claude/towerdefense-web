@@ -1,5 +1,35 @@
 [
   {
+    "date": "2026-05-27",
+    "version": "v11.4",
+    "title": "Conquest Tower Draft Mode",
+    "body": "Tower Draft Mode in Conquest: each battle draws terrain-biased pool of 6 towers (defense) and 6 enemy types (attack) Draft is deterministic per (territoryid, turnnumber) \u2014."
+  },
+  {
+    "date": "2026-05-22",
+    "version": "v11.3",
+    "title": "Aggiornamento",
+    "body": "Conquest Mode \u2014 Attack Battles (Reverse TD): player spawns enemies against static CPU towers. src/conquest/cpumap.py: generatecputowers(seed, terrain, fortification,."
+  },
+  {
+    "date": "2026-05-21",
+    "version": "v11.2",
+    "title": "Aggiornamento",
+    "body": "Conquest Mode \u2014 Defense Battles: real TD battles replace stub resolution. src/conquest/context.py: ConquestContext bridge dataclass (battletype, territoryid, terrain, mapseed,."
+  },
+  {
+    "date": "2026-05-21",
+    "version": "v11.1",
+    "title": "Aggiornamento",
+    "body": "Conquest Mode \u2014 Strategic Layer: turn system, budget income, CPU AI, save/load. src/conquest/turn.py: TurnManager (player/cpu phase, income collection, fortify,."
+  },
+  {
+    "date": "2026-05-21",
+    "version": "v11.0",
+    "title": "Aggiornamento",
+    "body": "Conquest Mode \u2014 World Map & Strategic UI. New game states: MODESELECT (post-login: Arcade vs Conquest), CONQUESTMENU (New/Load/Codex/Back), CONQUESTDIFFICULTY (Easy/Normal/Hard."
+  },
+  {
     "date": "2026-05-21",
     "version": "v10.10",
     "title": "Aggiornamento",
@@ -88,35 +118,5 @@
     "version": "v8.10",
     "title": "Achievement System",
     "body": "src/achievements.py: nuovo modulo puro. Achievement frozen dataclass, ACHIEVEMENTS lista 25 definizioni, getachievement(id), checkrunachievements(runstats) - list[str] (pura,."
-  },
-  {
-    "date": "2026-05-12",
-    "version": "v8.9",
-    "title": "Wave Preview Panel",
-    "body": "src/wave.py: wavepreview(wavenumber) - dict pura (zero side effects). Ritorna composizione wave: totale nemici, flag boss, lista per tipo con nome/icona/count.."
-  },
-  {
-    "date": "2026-05-11",
-    "version": "v8.8",
-    "title": "Endless/Survival Mode",
-    "body": "src/adaptive.py: ADAPTIVEENDLESSCAPS (hp 5.0/speed 4.0/dmg 4.0), ADAPTIVEENDLESSEXPBASE, isendless() helper. applyadaptiveincrement accetta wave: int = 0; post-wave 30 endless."
-  },
-  {
-    "date": "2026-05-11",
-    "version": "v8.7",
-    "title": "Tower Synergy System",
-    "body": "Nuovo modulo src/synergy.py: SynergyEffect frozen dataclass, SYNERGYRULES (6 coppie), getadjacentpairs() (Manhattan==1), computesynergies(), applysynergybonuses(),."
-  },
-  {
-    "date": "2026-05-11",
-    "version": "v8.6",
-    "title": "Retina Canvas Clarity + PWA",
-    "body": "towerdefense-web/public/game/index.html: Rimosso override bilinear (dpr 1 ? \"auto\") \u2192 imageRendering = \"pixelated\" sempre. Aggiunta tdWatchCanvasRendering() con MutationObserver."
-  },
-  {
-    "date": "2026-05-11",
-    "version": "v8.5",
-    "title": "Web Leaderboard + Run History",
-    "body": "Backend: src/leaderboard.py: top5global e top5user ora accettano limit: int = 20 (era hardcoded 5). backend/leaderboard.py: endpoint GET /leaderboard/global reso pubblico."
   }
 ]
